@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Haxpe.DbMigrator.Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

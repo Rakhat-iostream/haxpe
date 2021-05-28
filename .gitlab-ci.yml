@@ -1,0 +1,31 @@
+stages:
+  - build
+
+build:
+  image: docker:19.03.12
+  stage: build
+  services:
+    - docker:19.03.12-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  script:
+    - touch src/Haxpe.HttpApi.Host/appsettings.Production.json
+    - echo "$APP_SETTINGS" >> src/Haxpe.HttpApi.Host/appsettings.Production.json
+    - echo "$CI_REGISTRY_PASSWORD" | docker login registry.gitlab.com -u $CI_REGISTRY_USER --password-stdin
+    - docker build -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+migration:
+  image: docker:19.03.12
+  stage: build
+  when: manual
+  services:
+    - docker:19.03.12-dind
+  variables:
+    IMAGE_TAG: $CI_REGISTRY_IMAGE:migration
+  script:
+    - touch src/Haxpe.DbMigrator/appsettings.Production.json
+    - echo "$APP_SETTINGS_MIGRATOR" >> src/Haxpe.DbMigrator/appsettings.Production.json
+    - echo "$CI_REGISTRY_PASSWORD" | docker login registry.gitlab.com -u $CI_REGISTRY_USER --password-stdin
+    - docker build -t $IMAGE_TAG -f src/Haxpe.DbMigrator/Dockerfile .
+    - docker push $IMAGE_TAG

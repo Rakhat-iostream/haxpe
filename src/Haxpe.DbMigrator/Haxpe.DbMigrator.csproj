@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.3.21201.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0-preview.3.21201.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.0-preview.3.21201.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0-preview.3.21201.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0-preview.3.21201.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0-preview.1.21102.12" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.3.21201.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Haxpe.Application.Contracts\Haxpe.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Haxpe.EntityFrameworkCore.DbMigrations\Haxpe.EntityFrameworkCore.DbMigrations.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Logs\**" />
+    <Content Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Logs\**" />
+    <None Remove="appsettings.Development.json" />
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <None Remove="appsettings.Production.json" />
+
+  </ItemGroup>
+
+</Project>

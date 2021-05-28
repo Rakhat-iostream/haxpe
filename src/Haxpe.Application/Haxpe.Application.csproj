@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Haxpe</RootNamespace>
+    <MvcRazorExcludeRefAssembliesFromPublish>false</MvcRazorExcludeRefAssembliesFromPublish>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Haxpe.Domain\Haxpe.Domain.csproj" />
+    <ProjectReference Include="..\Haxpe.Application.Contracts\Haxpe.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
+    <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
+    <PackageReference Include="SendGrid" Version="9.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="V1\Facebook\" />
+    <Folder Include="V1\Google\" />
+    <Folder Include="V1\Constants\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Emails\**\*.*" />
+    <Content Remove="Emails\**\*.*" />
+  </ItemGroup>
+</Project>
