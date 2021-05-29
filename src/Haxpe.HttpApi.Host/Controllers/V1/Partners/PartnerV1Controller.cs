@@ -91,7 +91,8 @@ namespace Haxpe.V1.Partners
             return Response<PartnerV1Dto>.Ok(partner);
         }
 
-        [Authorize(Roles = RoleConstants.Admin + "," + RoleConstants.Partner)]
+        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleConstants.Partner)]
         [Route("api/v1/partner/{id}")]
         [HttpPut]
         public  async Task<Response<PartnerV1Dto>> UpdateAsync(Guid id, [FromBody] UpdatePartnerV1Dto input)
