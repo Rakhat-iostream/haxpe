@@ -41,6 +41,10 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <None Remove="appsettings.Production.json" />
+    <Content Include="appsettings.Production.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
 
   </ItemGroup>
 
