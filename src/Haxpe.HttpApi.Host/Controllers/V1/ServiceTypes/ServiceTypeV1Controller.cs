@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
@@ -31,12 +32,28 @@ namespace Haxpe.V1.ServiceTypes
             return Response<ServiceTypeV1Dto>.Ok(res);
         }
 
-        [Route("api/v1/service-type")]
+        [Route("api/v1/service-type/get-all")]
         [HttpGet]
-        public async Task<Response<PagedResultDto<ServiceTypeV1Dto>>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        public async Task<Response<IReadOnlyCollection<ServiceTypeV1Dto>>> GetAllAsync()
+        {
+            var res = await service.GetAllAsync();
+            return Response<IReadOnlyCollection<ServiceTypeV1Dto>>.Ok(res);
+        }
+
+        [Route("api/v1/service-type/page")]
+        [HttpGet]
+        public async Task<Response<PagedResultDto<ServiceTypeV1Dto>>> GetPageAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
             var res = await service.GetPageAsync(input);
             return Response<ServiceTypeV1Dto>.Ok(res);
+        }
+
+        [Route("api/v1/service-type")]
+        [HttpGet]
+        public async Task<Response<IReadOnlyCollection<ServiceTypeV1Dto>>> GetListAsync([FromQuery] ServiceTypeListQuery query)
+        {
+            var res = await service.GetListAsync(query);
+            return Response<IReadOnlyCollection<ServiceTypeV1Dto>>.Ok(res);
         }
 
         [Route("api/v1/service-type")]

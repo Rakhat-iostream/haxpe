@@ -47,10 +47,13 @@ namespace Haxpe.Infrastructure
         public async Task<TRoot[]> GetListAsync(Expression<Func<TRoot, bool>> predicate = null)
         {
             var query = predicate == null ? this.db : this.db.Where(predicate);
-            var count = await query.CountAsync();
-            if(count > MaxReturnSize)
+            if (predicate != null)
             {
-                throw new BusinessException(HaxpeDomainErrorCodes.TooManyObjectsToReturn);
+                var count = await query.CountAsync();
+                if (count > MaxReturnSize)
+                {
+                    throw new BusinessException(HaxpeDomainErrorCodes.TooManyObjectsToReturn);
+                }
             }
 
             var roots = await query.ToArrayAsync();

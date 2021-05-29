@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
@@ -33,10 +34,18 @@ namespace Haxpe.V1.Industries
 
         [Route("api/v1/industry/page")]
         [HttpGet]
-        public async Task<Response<PagedResultDto<IndustryV1Dto>>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        public async Task<Response<PagedResultDto<IndustryV1Dto>>> GetPageAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
             var res = await service.GetPageAsync(input);
             return Response<IndustryV1Dto>.Ok(res);
+        }
+
+        [Route("api/v1/industry/get-all")]
+        [HttpGet]
+        public async Task<Response<IReadOnlyCollection<IndustryV1Dto>>> GetAllAsync()
+        {
+            var res = await service.GetAllAsync();
+            return Response<IReadOnlyCollection<IndustryV1Dto>>.Ok(res);
         }
 
         [Route("api/v1/industry")]
