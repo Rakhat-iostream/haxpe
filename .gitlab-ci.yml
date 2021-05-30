@@ -24,8 +24,11 @@ migration:
   variables:
     IMAGE_TAG: $CI_REGISTRY_IMAGE:migration
   script:
+    - ls
+    - cat src/Haxpe.DbMigrator/appsettings.Production.json
     - touch src/Haxpe.DbMigrator/appsettings.Production.json
     - echo "$APP_SETTINGS_MIGRATOR" >> src/Haxpe.DbMigrator/appsettings.Production.json
+    - cat src/Haxpe.DbMigrator/appsettings.Production.json
     - echo "$CI_REGISTRY_PASSWORD" | docker login registry.gitlab.com -u $CI_REGISTRY_USER --password-stdin
     - docker build -t $IMAGE_TAG -f src/Haxpe.DbMigrator/Dockerfile .
     - docker push $IMAGE_TAG

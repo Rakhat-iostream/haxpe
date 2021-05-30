@@ -50,8 +50,8 @@ namespace Haxpe.V1.Account
             var user = new User
             {
                 Id = Guid.NewGuid().ToString(),
-                Email = input.EmailAddress,
-                UserName = input.EmailAddress,
+                Email = input.Email,
+                UserName = input.Email,
                 Name = input.FirstName,
                 Surname = input.LastName,
                 PhoneNumber = input.Phone,
