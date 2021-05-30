@@ -52,7 +52,6 @@ namespace Haxpe.V1.Account
         }
 
         [HttpPost]
-        [IgnoreAntiforgeryToken]
         [Route("api/v1/account/login")]
         public async Task<Response<UserProfileDto>> Login([FromBody] UserLoginInfo login)
         {
@@ -61,7 +60,6 @@ namespace Haxpe.V1.Account
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("api/v1/account/logout")]
         [Authorize]
         public Task Logout()
