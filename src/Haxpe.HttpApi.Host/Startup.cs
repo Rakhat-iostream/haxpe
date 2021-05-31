@@ -201,7 +201,8 @@ namespace Haxpe
                     c.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     return Task.CompletedTask;
                 };
-            });
+            })
+            .AddCookie(IdentityConstants.ExternalScheme);
 
             services.AddHttpContextAccessor();
             // Identity services
