@@ -62,9 +62,9 @@ namespace Haxpe.V1.Account
         [HttpPost]
         [Route("api/v1/account/logout")]
         [Authorize]
-        public Task Logout()
+        public async Task Logout()
         {
-            return service.Logout();
+            await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
         }
 
         [HttpGet]
