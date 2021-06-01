@@ -11,6 +11,8 @@ using Haxpe.Users;
 using Haxpe.Models;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Haxpe.V1.Account;
 
 namespace Haxpe.V1.Customers
 {
@@ -22,11 +24,13 @@ namespace Haxpe.V1.Customers
     {
         private readonly ICustomerV1Service service;
         private readonly ICurrentUserService currentUserService;
+        private readonly UserManager<User> userManager;
 
-        public CustomerV1Controller(ICustomerV1Service service, ICurrentUserService currentUserService)
+        public CustomerV1Controller(ICustomerV1Service service, ICurrentUserService currentUserService, UserManager<User> userManager)
         {
             this.service = service;
             this.currentUserService = currentUserService;
+            this.userManager = userManager;
         }
 
         [Route("api/v1/customer/{id}")]
@@ -69,6 +73,8 @@ namespace Haxpe.V1.Customers
         public async Task<Response<CustomerV1Dto>> CreateAsync([FromBody] UpdateCustomerV1Dto input)
         {
             var res = await service.CreateAsync(input);
+            var user = await this.userManager.FindByIdAsync(res.UserId.ToString());
+            (await this.userManager.AddToRoleAsync(user, RoleConstants.Customer)).CheckErrors();
             return Response<CustomerV1Dto>.Ok(res);
         }
 

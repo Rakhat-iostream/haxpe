@@ -60,7 +60,6 @@ namespace Haxpe.V1.Account
             user.SetFullName(input.FirstName, input.LastName);
 
             (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
-            (await UserManager.AddToRoleAsync(user, Roles.RoleConstants.Customer)).CheckErrors();
             
             await SignInManager.SignInAsync(user, false);
 
