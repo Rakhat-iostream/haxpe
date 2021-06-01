@@ -17,6 +17,7 @@ namespace Haxpe.EntityFrameworkCore
             builder.Entity<User>(b =>
             {
                 b.Property(x => x.Surname);
+                b.Property(x => x.FullName);
                 b.Property(x => x.PartnerId);
                 b.Property(x => x.PreferLanguage).HasMaxLength(6);
                 b.Property(x => x.IsExternal);

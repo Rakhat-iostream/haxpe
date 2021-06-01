@@ -49,7 +49,7 @@ namespace Haxpe.V1.Account
         {
             var user = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 Email = input.Email,
                 UserName = input.Email,
                 Name = input.FirstName,
@@ -57,6 +57,7 @@ namespace Haxpe.V1.Account
                 PhoneNumber = input.Phone,
                 PreferLanguage = input.PreferLanguage
             };
+            user.SetFullName(input.FirstName, input.LastName);
 
             (await UserManager.CreateAsync(user, input.Password)).CheckErrors();
             (await UserManager.AddToRoleAsync(user, Roles.RoleConstants.Customer)).CheckErrors();
@@ -146,11 +147,13 @@ namespace Haxpe.V1.Account
             if (!string.IsNullOrEmpty(input.Name))
             {
                 user.Name = input.Name;
+                user.SetFullName(input.Name, user.Surname);
             }
 
             if (!string.IsNullOrEmpty(input.Surname))
             {
                 user.Surname = input.Surname;
+                user.SetFullName(input.Name, input.Surname);
             }
 
             if (!string.IsNullOrEmpty(input.PreferLanguage))
@@ -236,12 +239,13 @@ namespace Haxpe.V1.Account
                     {
                         user = new User
                         {
-                            Id = Guid.NewGuid().ToString(),
+                            Id = Guid.NewGuid(),
                             Email = email,
                             UserName = email,
                             Name = customer.FirstName,
                             Surname = customer.LastName
                         };
+                        user.SetFullName(customer.FirstName, customer.LastName);
 
                         (await UserManager.CreateAsync(user)).CheckErrors();
                     }
@@ -284,12 +288,13 @@ namespace Haxpe.V1.Account
                     {
                         user = new User
                         {
-                            Id = Guid.NewGuid().ToString(),
+                            Id = Guid.NewGuid(),
                             Email = email,
                             UserName = email,
                             Name = customer.FirstName,
                             Surname = customer.LastName
                         };
+                        user.SetFullName(customer.FirstName, customer.LastName);
 
                         (await UserManager.CreateAsync(user)).CheckErrors();
                     }

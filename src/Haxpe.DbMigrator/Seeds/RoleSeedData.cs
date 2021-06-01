@@ -23,13 +23,13 @@ namespace Haxpe.DbMigrator.Seeds
         {
             var roles = new string[] { RoleConstants.Admin, RoleConstants.Partner, RoleConstants.Worker, RoleConstants.Customer };
 
-            var roleStore = new RoleStore<IdentityRole>(_context);
+            var roleStore = new RoleStore<IdentityRole<Guid>, HaxpeMigrationsDbContext, Guid>(_context);
 
             foreach (var role in roles)
             {
                 if (!_context.Roles.Any(r => r.Name == role))
                 {
-                    await roleStore.CreateAsync(new IdentityRole { Name = role, NormalizedName = role.ToUpper() });
+                    await roleStore.CreateAsync(new IdentityRole<Guid> { Name = role, NormalizedName = role.ToUpper() });
                 }
             }
 

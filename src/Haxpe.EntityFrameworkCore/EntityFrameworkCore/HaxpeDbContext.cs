@@ -9,10 +9,11 @@ using Haxpe.Users;
 using Haxpe.Workers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace Haxpe.EntityFrameworkCore
 {
-    public class HaxpeDbContext : IdentityDbContext<User>
+    public class HaxpeDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public DbSet<Partner> Partners { get; set; }
         

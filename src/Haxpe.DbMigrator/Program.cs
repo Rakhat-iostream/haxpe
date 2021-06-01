@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Haxpe.DbMigrator.Seeds;
@@ -25,7 +26,7 @@ namespace Haxpe.DbMigrator
                 var roleSeed = scope.ServiceProvider.GetRequiredService<RoleSeedData>();
                 await roleSeed.SeedRoles();
             }
-
+            Console.WriteLine("Migration is done");
             host.Run();
         }
 

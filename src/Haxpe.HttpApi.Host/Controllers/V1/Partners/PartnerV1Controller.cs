@@ -65,7 +65,7 @@ namespace Haxpe.V1.Partners
 
             var user = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 UserName = input.OwnerEmail,
                 Email = input.OwnerEmail,
                 Name = input.OwnerFirstName,
@@ -73,6 +73,7 @@ namespace Haxpe.V1.Partners
                 PhoneNumber = input.OwnerPhone,
                 PartnerId = partnerId
             };
+            user.SetFullName(user.Name, user.Surname);
 
             var res = await userManager.CreateAsync(user, "Pass!123");
             res.CheckErrors();
@@ -83,7 +84,7 @@ namespace Haxpe.V1.Partners
             var partner = await partnerV1Service.CreateAsync(new UpdatePartnerV1Dto {
                 Id = partnerId,
                 Name = input.Name,
-                OwnerId = Guid.Parse(user.Id),
+                OwnerId = user.Id,
                 Description = input.Description,
                 AddressId = input.AddressId }
             );

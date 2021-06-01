@@ -1,11 +1,12 @@
 ﻿using System;
 using Haxpe.Users;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Haxpe.EntityFrameworkCore
 {
-    public class HaxpeMigrationsDbContext : IdentityDbContext<User>
+    public class HaxpeMigrationsDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
     {
         public HaxpeMigrationsDbContext(DbContextOptions<HaxpeMigrationsDbContext> options) 
             : base(options)

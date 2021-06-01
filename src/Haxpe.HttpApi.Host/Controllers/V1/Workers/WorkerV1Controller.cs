@@ -62,7 +62,7 @@ namespace Haxpe.V1.Workers
         {
             var user = new User
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid(),
                 UserName = input.Email,
                 Email = input.Email,
                 Name = input.FirstName,
@@ -70,6 +70,7 @@ namespace Haxpe.V1.Workers
                 PhoneNumber = input.Phone,
                 PartnerId = input.PartnerId
             };
+            user.SetFullName(user.Name, user.Surname);
 
             (await _userManager.CreateAsync(user, "Pass!123")).CheckErrors();
 
@@ -78,7 +79,7 @@ namespace Haxpe.V1.Workers
             var res =  await workerV1Service.CreateAsync(new UpdateWorkerV1Dto()
             {
                 PartnerId = input.PartnerId,
-                UserId = Guid.Parse(user.Id),
+                UserId = user.Id,
                 WorkerServiceTypes = input.WorkerServiceTypes
             });
 
