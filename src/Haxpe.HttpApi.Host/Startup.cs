@@ -210,18 +210,18 @@ namespace Haxpe
             services.TryAddScoped<IPasswordValidator<User>, PasswordValidator<User>>();
             services.TryAddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
-            services.TryAddScoped<IRoleValidator<IdentityRole>, RoleValidator<IdentityRole>>();
+            services.TryAddScoped<IRoleValidator<IdentityRole<Guid>>, RoleValidator<IdentityRole<Guid>>>();
             // No interface for the error describer so we can add errors without rev'ing the interface
             services.TryAddScoped<IdentityErrorDescriber>();
             services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<User>>();
             services.TryAddScoped<ITwoFactorSecurityStampValidator, TwoFactorSecurityStampValidator<User>>();
-            services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, IdentityRole>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User, IdentityRole<Guid>>>();
             services.TryAddScoped<IUserConfirmation<User>, DefaultUserConfirmation<User>>();
             services.TryAddScoped<UserManager<User>>();
             services.TryAddScoped<SignInManager<User>>();
-            services.TryAddScoped<RoleManager<IdentityRole>>();
+            services.TryAddScoped<RoleManager<IdentityRole<Guid>>>();
 
-            return new IdentityBuilder(typeof(User), typeof(IdentityRole), services);
+            return new IdentityBuilder(typeof(User), typeof(IdentityRole<Guid>), services);
         }
 
         private static void ConfigureSwaggerServices(IServiceCollection services, IConfiguration configuration)
