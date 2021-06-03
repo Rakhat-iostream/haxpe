@@ -13,10 +13,13 @@
 
         public const string CustomerNotFound = "customerNotFound"; 
         public const string OrderNotFound = "orderNotFound";
+        public const string CouponNotFound = "couponNotFound";
 
         public const string OrderAssignWorkerFromOtherPartner = "orderAssignWorkerFromOtherPartner";
         public const string OrderWorkflowViolation = "orderWorkflowViolation";
 
         public const string TooManyObjectsToReturn = "tooManyObjectsToReturn";
+
+        public const string NotFound = "notFound";
     }
 }

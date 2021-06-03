@@ -1,4 +1,5 @@
 ﻿using Haxpe.Addresses;
+using Haxpe.Coupons;
 using Haxpe.Customers;
 using Haxpe.Industries;
 using Haxpe.Orders;
@@ -117,11 +118,26 @@ namespace Haxpe.EntityFrameworkCore
                  b.Property(p => p.OrderStatus);
                  b.Property(p => p.Rating);
                  b.Property(p => p.Comment);
-                
+                 b.Property(p => p.CouponId);
+                 b.Property(p => p.CouponCode).HasMaxLength(256);
+
                  b.HasIndex(x => new { x.CustomerId });
                  b.HasIndex(x => new { x.WorkerId });
                  b.HasIndex(x => new { x.PartnerId });
              });
+
+            builder.Entity<Coupon>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "Coupon", HaxpeConsts.DbSchema);
+                b.Property(p => p.Id);
+                b.Property(p => p.Code).HasMaxLength(256);
+                b.Property(p => p.ExpirationDate);
+                b.Property(p => p.CreatedDate);
+                b.Property(p => p.IsDeleted);
+                b.Property(p => p.Value);
+                b.Property(p => p.Unit);
+                b.HasIndex(x => x.Code);
+            });
         }
     }
 }

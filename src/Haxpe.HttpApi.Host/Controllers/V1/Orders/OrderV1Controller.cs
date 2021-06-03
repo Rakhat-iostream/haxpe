@@ -95,5 +95,14 @@ namespace Haxpe.V1.Orders
             var res = await service.CancelOrder(id);
             return Response<OrderV1Dto>.Ok(res);
         }
+
+        [HttpPost]
+        [Route("api/v1/order/{id}/applyCoupon")]
+        [Authorize(Roles = RoleConstants.Customer)]
+        public async Task<Response<OrderV1Dto>> ApplyCoupon(Guid id, [FromBody] ApplyCouponDto code)
+        {
+            var res = await service.ApplyCoupon(id, code);
+            return Response<OrderV1Dto>.Ok(res);
+        }
     }
 }

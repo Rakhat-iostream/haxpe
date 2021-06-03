@@ -9,6 +9,7 @@ using Haxpe.Users;
 using Haxpe.V1.Account;
 using Haxpe.V1.Addresses;
 using Haxpe.V1.Common;
+using Haxpe.V1.Coupons;
 using Haxpe.V1.Customers;
 using Haxpe.V1.Emails;
 using Haxpe.V1.Facebook;
@@ -104,6 +105,7 @@ namespace Haxpe
             services.AddScoped<IServiceTypeV1Service, ServiceTypeV1Service>();
             services.AddScoped<IWorkerV1Service, WorkerV1Service>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<ICouponV1Service, CouponV1Service>();
 
             services.AddDbContext<HaxpeDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
 

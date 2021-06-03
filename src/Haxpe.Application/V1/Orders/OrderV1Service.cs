@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Haxpe.Coupons;
 using Haxpe.Customers;
 using Haxpe.Infrastructure;
 using Haxpe.Orders;
@@ -20,6 +21,7 @@ namespace Haxpe.V1.Orders
         private readonly IRepository<Partner, Guid> partnerRepository;
         private readonly IRepository<Customer, Guid> customerRepository;
         private readonly IRepository<Haxpe.ServiceTypes.ServiceType, int> serviceTypeRepository;
+        private readonly IRepository<Coupon, Guid> couponRepository;
         private readonly ITaxProvider taxProvider;
         private readonly ICurrentUserService currentUserService;
 
@@ -29,10 +31,10 @@ namespace Haxpe.V1.Orders
             IRepository<Partner, Guid> partnerRepository,
             IRepository<Customer, Guid> customerRepository,
             IRepository<Haxpe.ServiceTypes.ServiceType, int> serviceTypeRepository,
+            IRepository<Coupon, Guid> couponRepository,
             ITaxProvider taxProvider,
             ICurrentUserService currentUserService,
-            IMapper mapper
-        ) : base(mapper)
+            IMapper mapper) : base(mapper)
         {
             this.orderRepository = orderRepository;
             this.workerRepository = workerRepository;
@@ -41,6 +43,24 @@ namespace Haxpe.V1.Orders
             this.serviceTypeRepository = serviceTypeRepository;
             this.taxProvider = taxProvider;
             this.currentUserService = currentUserService;
+            this.couponRepository = couponRepository;
+        }
+
+        public async Task<OrderV1Dto> ApplyCoupon(Guid id, ApplyCouponDto model)
+        {
+            var order = await orderRepository.FindAsync(id);
+            if (order == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.NotFound);
+            }
+
+            var coupon = await this.couponRepository.FindAsync(x => x.Code == model.Code);
+            if (coupon == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.CouponNotFound);
+            }
+            order.ApplyCoupon(coupon);
+            return this.mapper.Map<OrderV1Dto>(order);
         }
 
         public async Task<OrderV1Dto> AssignWorker(Guid id, Guid workerId)

@@ -23,7 +23,8 @@ namespace Haxpe.V1.Orders
         Task<OrderV1Dto> StartJob(Guid id);
         
         Task<OrderV1Dto> CompleteJob(Guid id);
-        
+
+        Task<OrderV1Dto> ApplyCoupon(Guid id, ApplyCouponDto model);
 
     }
 }

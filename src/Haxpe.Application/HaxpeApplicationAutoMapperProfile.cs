@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Haxpe.Addresses;
+using Haxpe.Coupons;
 using Haxpe.Customers;
 using Haxpe.Industries;
 using Haxpe.Orders;
@@ -8,6 +9,7 @@ using Haxpe.ServiceTypes;
 using Haxpe.Users;
 using Haxpe.V1.Account;
 using Haxpe.V1.Addresses;
+using Haxpe.V1.Coupons;
 using Haxpe.V1.Industry;
 using Haxpe.V1.Orders;
 using Haxpe.V1.Partners;
@@ -48,6 +50,9 @@ namespace Haxpe
             CreateMap<User, UserProfileDto>();
 
             CreateMap<User, IdentityUserDto>();
+
+            CreateMap<Coupon, CouponV1Dto>();
+
         }
     }
 }

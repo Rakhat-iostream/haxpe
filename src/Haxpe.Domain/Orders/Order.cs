@@ -1,6 +1,7 @@
 ﻿using System;
 using Haxpe.Workers;
 using Haxpe.Infrastructure;
+using Haxpe.Coupons;
 
 namespace Haxpe.Orders
 {
@@ -60,6 +61,10 @@ namespace Haxpe.Orders
         
         public OrderStatus OrderStatus { get; private set; }
 
+        public Guid? CouponId { get; set; }
+
+        public string CouponCode { get; set; }
+
         public void AssignWorker(Worker worker)
         {
             if (OrderStatus != OrderStatus.Created)
@@ -108,6 +113,12 @@ namespace Haxpe.Orders
             }
             CompletedDate = DateTimeOffset.Now;
             OrderStatus = OrderStatus.Completed;
+        }
+
+        public void ApplyCoupon(Coupon coupon)
+        {
+            CouponId = coupon.Id;
+            CouponCode = coupon.Code;
         }
     }
 }
