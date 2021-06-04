@@ -63,7 +63,7 @@ namespace Haxpe.Orders
 
         public Guid? CouponId { get; set; }
 
-        public string CouponCode { get; set; }
+        public string? CouponCode { get; set; }
 
         public void AssignWorker(Worker worker)
         {
