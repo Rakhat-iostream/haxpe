@@ -6,17 +6,8 @@ using System.Threading.Tasks;
 
 namespace Haxpe.Infrastructure
 {
-    public abstract class AggregateRoot<T> : IAggregateRoot<T>
+    public interface IAggregateRoot<T>
     {
         public T Id { get; set; }
-
-        protected AggregateRoot(T id)
-        {
-            Id = id;
-        }
-
-        protected AggregateRoot()
-        {
-        }
     }
 }

@@ -11,7 +11,7 @@ using System.Linq.Dynamic.Core.Exceptions;
 namespace Haxpe.Infrastructure
 {
     public class GenericRepository<TRoot, TId> : IRepository<TRoot, TId>
-        where TRoot : AggregateRoot<TId>
+        where TRoot : class, IAggregateRoot<TId>
         where TId : IEquatable<TId>
     {
         private const int MaxReturnSize = 500;
@@ -45,7 +45,7 @@ namespace Haxpe.Infrastructure
             return await db.FindAsync(id);
         }
 
-        public async Task<TRoot[]> GetListAsync(Expression<Func<TRoot, bool>> predicate = null)
+        public async Task<IReadOnlyCollection<TRoot>> GetListAsync(Expression<Func<TRoot, bool>> predicate = null)
         {
             var query = predicate == null ? this.db : this.db.Where(predicate);
             if (predicate != null)

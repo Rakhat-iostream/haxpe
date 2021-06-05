@@ -18,24 +18,23 @@
     "Custom": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:22445;http://localhost:50354",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:22445;http://localhost:50354"
     },
     "Haxpe.HttpApi.Host": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:44320;https://localhost:44321",
-      "environmentVariables": {}
+      "applicationUrl": "http://localhost:44320;https://localhost:44321"
     },
     "Haxpe": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:42670;http://localhost:27942",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:42670;http://localhost:27942"
     }
   }
 }

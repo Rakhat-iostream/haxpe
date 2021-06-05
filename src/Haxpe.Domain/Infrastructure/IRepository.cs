@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Haxpe.Infrastructure
 {
     public interface IRepository<TRoot, TId>
-        where TRoot: AggregateRoot<TId>
+        where TRoot: IAggregateRoot<TId>
     {
         Task<TRoot> FindAsync(Expression<Func<TRoot, bool>> predicate);
 
@@ -16,7 +16,7 @@ namespace Haxpe.Infrastructure
 
         Task<(TRoot[], int)> GetPageAsync(int pageNumber, int pageSize, Expression<Func<TRoot, bool>> predicate = null);
 
-        Task<TRoot[]> GetListAsync(Expression<Func<TRoot, bool>> predicate = null);
+        Task<IReadOnlyCollection<TRoot>> GetListAsync(Expression<Func<TRoot, bool>> predicate = null);
 
         Task DeleteAsync(TId id);
 
