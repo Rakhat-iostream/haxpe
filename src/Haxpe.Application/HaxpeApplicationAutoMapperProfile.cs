@@ -14,6 +14,7 @@ using Haxpe.V1.Industry;
 using Haxpe.V1.Orders;
 using Haxpe.V1.Partners;
 using Haxpe.V1.ServiceType;
+using Haxpe.V1.Users;
 using Haxpe.V1.Workers;
 using Haxpe.Workers;
 using Microsoft.AspNetCore.Identity;
@@ -48,6 +49,7 @@ namespace Haxpe
             CreateMap<Order, OrderV1Dto>();
 
             CreateMap<User, UserProfileDto>();
+            CreateMap<User, UserV1Dto>();
 
             CreateMap<User, IdentityUserDto>();
 

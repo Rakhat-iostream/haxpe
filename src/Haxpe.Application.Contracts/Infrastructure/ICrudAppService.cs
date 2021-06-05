@@ -6,27 +6,23 @@ using System.Threading.Tasks;
 
 namespace Haxpe.Infrastructure
 {
-    public interface ICrudAppService<TEntityDto, TId, TCreateDto>: ICrudAppService<TEntityDto, TId, TCreateDto, TCreateDto>
-        where TEntityDto: EntityDto<TId>
+    public interface ICrudAppService<TEntityDto, TId, TCreateDto> : ICrudAppService<TEntityDto, TId, TCreateDto, TCreateDto>
+        where TEntityDto : EntityDto<TId>
     {
     }
-
+    
     public interface ICrudAppService<TEntityDto, TId, TCreateDto, TUpdateDto> : ICrudAppService<TEntityDto, TId, TUpdateDto, TCreateDto, PagedAndSortedResultRequestDto>
-        where TEntityDto : EntityDto<TId>
+            where TEntityDto : EntityDto<TId>
     {
     }
-
-    public interface ICrudAppService<TEntityDto, TId, TCreateDto, TUpdateDto, TPagedAndSortedResultRequestDto> : IApplicationService
+    
+    public interface ICrudAppService<TEntityDto, TId, TCreateDto, TUpdateDto, TPagedAndSortedResultRequestDto> : IReadAppService<TEntityDto, TId, TPagedAndSortedResultRequestDto>
         where TEntityDto : EntityDto<TId>
-        where TPagedAndSortedResultRequestDto: PagedAndSortedResultRequestDto
+        where TPagedAndSortedResultRequestDto : PagedAndSortedResultRequestDto
     {
         Task<TEntityDto> CreateAsync(TCreateDto dto);
 
         Task<TEntityDto> UpdateAsync(TId id, TUpdateDto dto);
-
-        Task<TEntityDto> FindAsync(TId id);
-
-        Task<PagedResultDto<TEntityDto>> GetPageAsync(TPagedAndSortedResultRequestDto request);
 
         Task DeleteAsync(TId id);
     }

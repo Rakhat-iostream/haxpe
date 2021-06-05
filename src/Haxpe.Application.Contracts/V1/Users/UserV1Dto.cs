@@ -1,11 +1,18 @@
 ﻿using Haxpe.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Haxpe.Users
+namespace Haxpe.V1.Users
 {
-    public class User : IdentityUser<Guid>, IAggregateRoot<Guid>
+    public class UserV1Dto : EntityDto<Guid>
     {
+        [Required]
+        public Guid Id { get; set; }
+
         public string Name { get; set; }
 
         public string Surname { get; set; }
@@ -17,14 +24,5 @@ namespace Haxpe.Users
         public string? PreferLanguage { get; set; }
 
         public bool IsExternal { get; set; }
-
-        public void SetFullName(string name, string surname)
-        {
-            FullName = $"{name} {surname}";
-        }
-
-        public User()
-        {
-        }
     }
 }
