@@ -31,5 +31,6 @@
         public const string TooManyObjectsToReturn = "tooManyObjectsToReturn";
 
         public const string NotFound = "notFound";
+        public const string WorkerLocationNotFound = "workerLocationNotFound";
     }
 }
