@@ -6,6 +6,7 @@ using Haxpe.Orders;
 using Haxpe.Partners;
 using Haxpe.ServiceTypes;
 using Haxpe.Users;
+using Haxpe.WorkerLocationTrackers;
 using Haxpe.Workers;
 using Microsoft.EntityFrameworkCore;
 
@@ -137,6 +138,17 @@ namespace Haxpe.EntityFrameworkCore
                 b.Property(p => p.Value);
                 b.Property(p => p.Unit);
                 b.HasIndex(x => x.Code);
+            });
+
+            builder.Entity<WorkerLocationTracker>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "WorkerLocationTracker", HaxpeConsts.DbSchema);
+                b.Property(p => p.Id);
+                b.Property(p => p.WorkerId);
+                b.Property(p => p.UpdateDate);
+                b.Property(p => p.Longitude);
+                b.Property(p => p.Latitude);
+                b.HasIndex(x => x.WorkerId);
             });
         }
     }

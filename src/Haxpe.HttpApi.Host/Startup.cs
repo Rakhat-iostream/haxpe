@@ -20,6 +20,7 @@ using Haxpe.V1.Orders;
 using Haxpe.V1.Partners;
 using Haxpe.V1.ServiceType;
 using Haxpe.V1.ServiceTypes;
+using Haxpe.V1.WorkerLocationTrackers;
 using Haxpe.V1.Users;
 using Haxpe.V1.Workers;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -107,6 +108,7 @@ namespace Haxpe
             services.AddScoped<IWorkerV1Service, WorkerV1Service>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
             services.AddScoped<ICouponV1Service, CouponV1Service>();
+            services.AddScoped<IWorkerLocationTrackerV1Service, WorkerLocationTrackerV1Service>();
             services.AddScoped<IUserService, UserService>();
 
             services.AddDbContext<HaxpeDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
