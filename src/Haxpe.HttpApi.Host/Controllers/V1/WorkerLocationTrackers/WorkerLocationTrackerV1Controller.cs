@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace Haxpe.Controllers.V1.WorkerLocationTrackers
 {
-    [Route("api/[controller]")]
     [ApiController]
     [ControllerName("WorkerLocationTracker")]
     public class WorkerLocationTrackerV1Controller : ControllerBase
