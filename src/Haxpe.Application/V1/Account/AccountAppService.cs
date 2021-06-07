@@ -317,5 +317,16 @@ namespace Haxpe.V1.Account
             res.Roles = await this.currentUserService.GetCurrentUserRolesAsync(user);
             return res;
         }
+
+        public async Task ConfirmEmailAsync(ConfirmEmailDto input)
+        {
+            var user = await UserManager.FindByEmailAsync(input.Email);
+            if(user == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.UserNotFound);
+            }
+            var result = await UserManager.ConfirmEmailAsync(user, input.Token);
+            result.CheckErrors();
+        }
     }
 }

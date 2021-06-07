@@ -38,6 +38,14 @@ namespace Haxpe.V1.Account
         }
 
         [HttpPost]
+        [Route("api/v1/account/confirm-email")]
+        public async Task<Response> ConfirmEmailAsync([FromBody] ConfirmEmailDto input)
+        {
+            await service.ConfirmEmailAsync(input);
+            return Haxpe.Models.Response.Ok();
+        }
+
+        [HttpPost]
         [Route("api/v1/account/send-password-reset-code")]
         public Task SendPasswordResetCodeAsync([FromBody] SendPasswordResetCodeDto input)
         {

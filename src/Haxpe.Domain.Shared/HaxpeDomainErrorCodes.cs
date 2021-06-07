@@ -20,7 +20,7 @@
         public const string AccountInvalidToken = "accountInvalidToken";
 
 
-
+        public const string UserNotFound = "UserNotFound";
         public const string CustomerNotFound = "customerNotFound"; 
         public const string OrderNotFound = "orderNotFound";
         public const string CouponNotFound = "couponNotFound";

@@ -11,6 +11,8 @@ namespace Haxpe.V1.Account
     {
         Task<UserProfileDto> RegisterAsync(RegisterDto input);
 
+        Task ConfirmEmailAsync(ConfirmEmailDto input);
+
         Task SendPasswordResetCodeAsync(SendPasswordResetCodeDto input);
 
         Task ResetPasswordAsync(ResetPasswordDto input);
