@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 
 namespace Haxpe.Controllers.V1.Users
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
