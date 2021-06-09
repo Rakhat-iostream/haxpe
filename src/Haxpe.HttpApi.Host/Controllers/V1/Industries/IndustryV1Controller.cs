@@ -14,7 +14,6 @@ namespace Haxpe.V1.Industries
     [ApiVersion("1.0")]
     [ApiController]
     [ControllerName("Industry")]
-    [Authorize]
     public class IndustryV1Controller : ControllerBase
     {
         private readonly IIndustryV1Service service;
