@@ -48,6 +48,15 @@ namespace Haxpe.V1.Workers
             return Response<WorkerV1Dto>.Ok(res);
         }
 
+        [Route("api/v1/worker/page")]
+        [HttpGet]
+        [Authorize(Roles = RoleConstants.Admin)]
+        public async Task<Response<PagedResultDto<WorkerV1Dto>>> GetPageAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        {
+            var res = await workerV1Service.GetPageAsync(input);
+            return Response<Response<PagedResultDto<WorkerV1Dto>>>.Ok(res);
+        }
+
         [Route("api/v1/worker")]
         [HttpPost]
         public async Task<Response<WorkerV1Dto>> CreateAsync([FromBody] UpdateWorkerV1Dto input)

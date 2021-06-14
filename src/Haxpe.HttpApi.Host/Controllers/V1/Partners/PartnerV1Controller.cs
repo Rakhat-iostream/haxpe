@@ -39,6 +39,15 @@ namespace Haxpe.V1.Partners
             return Response<PartnerV1Dto>.Ok(res);
         }
 
+        [Route("api/v1/partner/page")]
+        [HttpGet]
+        [Authorize(Roles = RoleConstants.Admin)]
+        public async Task<Response<PagedResultDto<PartnerV1Dto>>> GetPageAsync([FromQuery] PagedAndSortedResultRequestDto input)
+        {
+            var res = await partnerV1Service.GetPageAsync(input);
+            return Response<Response<PagedResultDto<PartnerV1Dto>>>.Ok(res);
+        }
+
         [Route("api/v1/partner")]
         [HttpGet]
         public async Task<Response<PagedResultDto<PartnerV1Dto>>> GetListAsync([FromQuery] PagedAndSortedResultRequestDto input)
