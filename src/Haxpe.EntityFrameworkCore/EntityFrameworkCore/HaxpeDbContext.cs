@@ -34,6 +34,8 @@ namespace Haxpe.EntityFrameworkCore
 
         public DbSet<WorkerLocationTracker> WorkerLocationTrackers { get;set;}
 
+        public DbSet<PartnersIndustry> PartnersIndustries { get; set; }
+
         public HaxpeDbContext(DbContextOptions<HaxpeDbContext> options)
             : base(options)
         {

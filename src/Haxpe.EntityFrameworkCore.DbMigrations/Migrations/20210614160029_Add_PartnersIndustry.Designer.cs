@@ -4,14 +4,16 @@ using Haxpe.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Haxpe.Migrations
 {
     [DbContext(typeof(HaxpeMigrationsDbContext))]
-    partial class HaxpeMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210614160029_Add_PartnersIndustry")]
+    partial class Add_PartnersIndustry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,9 +283,6 @@ namespace Haxpe.Migrations
                         .IsRequired()
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
-
-                    b.Property<int?>("NumberOfWorkers")
-                        .HasColumnType("integer");
 
                     b.Property<Guid>("OwnerUserId")
                         .HasColumnType("uuid");
