@@ -133,7 +133,7 @@ namespace Haxpe.EntityFrameworkCore
                 b.Property(p => p.Id);
                 b.Property(p => p.Code).HasMaxLength(256);
                 b.Property(p => p.ExpirationDate);
-                b.Property(p => p.CreatedDate);
+                b.Property(p => p.CreationDate);
                 b.Property(p => p.IsDeleted);
                 b.Property(p => p.Value);
                 b.Property(p => p.Unit);

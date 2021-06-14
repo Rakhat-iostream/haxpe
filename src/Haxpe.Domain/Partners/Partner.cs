@@ -26,6 +26,7 @@ namespace Haxpe.Partners
             OwnerUserId = ownerUserId;
             Description = description;
             AddressId = addressId;
+            CreationDate = DateTime.UtcNow;
         }
 
         private Partner()

@@ -25,6 +25,7 @@ namespace Haxpe.Orders
             PaymentMethod = paymentMethod;
             Tax = tax;
             OrderStatus = orderStatus;
+            CreationDate = DateTime.UtcNow;
         }
         
         private Order() { }

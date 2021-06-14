@@ -34,6 +34,7 @@ namespace Haxpe.Addresses
             Lon = lon;
             Lat = lat;
             ExternalId = externalId;
+            CreationDate = DateTime.UtcNow;
         }
         
         private Address() { }

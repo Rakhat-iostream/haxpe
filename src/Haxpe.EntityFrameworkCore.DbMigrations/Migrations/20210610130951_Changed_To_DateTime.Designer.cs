@@ -4,14 +4,16 @@ using Haxpe.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Haxpe.Migrations
 {
     [DbContext(typeof(HaxpeMigrationsDbContext))]
-    partial class HaxpeMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210610130951_Changed_To_DateTime")]
+    partial class Changed_To_DateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -9,10 +9,12 @@ namespace Haxpe.Infrastructure
     public abstract class AggregateRoot<T> : IAggregateRoot<T>
     {
         public T Id { get; set; }
+        public DateTime CreationDate { get; set; }
 
         protected AggregateRoot(T id)
         {
             Id = id;
+            CreationDate = DateTime.UtcNow;
         }
 
         protected AggregateRoot()

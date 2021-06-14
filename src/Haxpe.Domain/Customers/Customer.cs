@@ -9,6 +9,7 @@ namespace Haxpe.Customers
         {
             UserId = userId;
             AddressId = addressId;
+            CreationDate = DateTime.UtcNow;
         }
         
         private Customer() { }

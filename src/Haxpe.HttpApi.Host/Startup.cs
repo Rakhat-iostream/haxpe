@@ -2,7 +2,6 @@
 using Haxpe.EntityFrameworkCore;
 using Haxpe.Filters;
 using Haxpe.Infrastructure;
-using Haxpe.Roles;
 using Haxpe.Services;
 using Haxpe.Taxes;
 using Haxpe.Users;
@@ -23,7 +22,6 @@ using Haxpe.V1.ServiceTypes;
 using Haxpe.V1.WorkerLocationTrackers;
 using Haxpe.V1.Users;
 using Haxpe.V1.Workers;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -42,8 +40,10 @@ using Prometheus;
 using Prometheus.DotNetRuntime;
 using SendGrid;
 using System;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Haxpe.V1.Statistics;
+using Haxpe.Infrastructure.Statistics;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Haxpe
 {
@@ -110,15 +110,17 @@ namespace Haxpe
             services.AddScoped<ICouponV1Service, CouponV1Service>();
             services.AddScoped<IWorkerLocationTrackerV1Service, WorkerLocationTrackerV1Service>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IStatisticsService, StatisticsService>();
 
             services.AddDbContext<HaxpeDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
-
+            
             ConfigureAuthentication(services, Configuration)
             .AddEntityFrameworkStores<HaxpeDbContext>()
             .AddDefaultTokenProviders();
 
             services.AddAutoMapper(typeof(HaxpeApplicationAutoMapperProfile));
             services.AddScoped(typeof(IRepository<,>), typeof(GenericRepository<,>));
+            services.AddScoped(typeof(IStatisticsRepository<,>), typeof(StatisticsRepository<,>));
 
             services.Configure<IdentityOptions>(options =>
             {
