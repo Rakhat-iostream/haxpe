@@ -24,17 +24,20 @@ namespace Haxpe.V1.Partners
     public class PartnerV1Controller : ControllerBase
     {
         private readonly UserManager<User> userManager;
+        protected SignInManager<User> signInManager;
         private readonly IPartnerV1Service partnerV1Service;
         private readonly ICurrentUserService currentUserService;
 
         public PartnerV1Controller(
             UserManager<User> userManager,
             IPartnerV1Service partnerV1Service,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService, 
+            SignInManager<User> signInManager)
         {
             this.userManager = userManager;
             this.partnerV1Service = partnerV1Service;
             this.currentUserService = currentUserService;
+            this.signInManager = signInManager;
         }
 
 
@@ -78,6 +81,7 @@ namespace Haxpe.V1.Partners
             var res = await partnerV1Service.CreateAsync(input);
             var user = await this.userManager.FindByIdAsync(res.OwnerUserId.ToString());
             (await this.userManager.AddToRoleAsync(user, RoleConstants.Partner)).CheckErrors();
+            await this.signInManager.SignInAsync(user, true);
             return Response<PartnerV1Dto>.Ok(res);
         }
 

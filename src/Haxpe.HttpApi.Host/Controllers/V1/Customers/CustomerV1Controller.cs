@@ -25,12 +25,19 @@ namespace Haxpe.V1.Customers
         private readonly ICustomerV1Service service;
         private readonly ICurrentUserService currentUserService;
         private readonly UserManager<User> userManager;
+        protected SignInManager<User> signInManager;
 
-        public CustomerV1Controller(ICustomerV1Service service, ICurrentUserService currentUserService, UserManager<User> userManager)
+        public CustomerV1Controller(
+            ICustomerV1Service service, 
+            ICurrentUserService currentUserService,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager
+        )
         {
             this.service = service;
             this.currentUserService = currentUserService;
             this.userManager = userManager;
+            this.signInManager = signInManager;
         }
 
         [Route("api/v1/customer/{id}")]
@@ -75,6 +82,7 @@ namespace Haxpe.V1.Customers
             var res = await service.CreateAsync(input);
             var user = await this.userManager.FindByIdAsync(res.UserId.ToString());
             (await this.userManager.AddToRoleAsync(user, RoleConstants.Customer)).CheckErrors();
+            await this.signInManager.SignInAsync(user, true);
             return Response<CustomerV1Dto>.Ok(res);
         }
 
