@@ -10,6 +10,8 @@ namespace Haxpe.Infrastructure
     {
         public T Id { get; protected set; }
 
+        public DateTime CreationDate { get; set; }
+
         protected EntityDto(T id)
         {
             Id = id;

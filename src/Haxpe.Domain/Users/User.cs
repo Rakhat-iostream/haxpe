@@ -18,6 +18,8 @@ namespace Haxpe.Users
 
         public bool IsExternal { get; set; }
 
+        public DateTime CreationDate { get; set; }
+
         public void SetFullName(string name, string surname)
         {
             FullName = $"{name} {surname}";

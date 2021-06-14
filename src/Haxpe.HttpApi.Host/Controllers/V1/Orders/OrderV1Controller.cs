@@ -97,7 +97,7 @@ namespace Haxpe.V1.Orders
         }
 
         [HttpPost]
-        [Route("api/v1/order/{id}/applyCoupon")]
+        [Route("api/v1/order/{id}/apply-coupon")]
         [Authorize(Roles = RoleConstants.Customer)]
         public async Task<Response<OrderV1Dto>> ApplyCoupon(Guid id, [FromBody] ApplyCouponDto code)
         {

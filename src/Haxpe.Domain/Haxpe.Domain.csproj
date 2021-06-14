@@ -15,4 +15,7 @@
     <ProjectReference Include="..\Haxpe.Domain.Shared\Haxpe.Domain.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  </ItemGroup>
+
 </Project>

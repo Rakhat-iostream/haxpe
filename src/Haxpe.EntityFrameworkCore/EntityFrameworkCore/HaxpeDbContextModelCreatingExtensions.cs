@@ -1,6 +1,7 @@
 ﻿using Haxpe.Addresses;
 using Haxpe.Coupons;
 using Haxpe.Customers;
+using Haxpe.Files;
 using Haxpe.Industries;
 using Haxpe.Orders;
 using Haxpe.Partners;
@@ -149,6 +150,24 @@ namespace Haxpe.EntityFrameworkCore
                 b.Property(p => p.Longitude);
                 b.Property(p => p.Latitude);
                 b.HasIndex(x => x.WorkerId);
+            });
+
+            builder.Entity<FileInfo>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "FileInfos", HaxpeConsts.DbSchema);
+                b.Property(p => p.Id);
+                b.Property(p => p.FileName).HasMaxLength(512);
+                b.Property(p => p.FileType).HasMaxLength(512);
+                b.Property(p => p.CreationDate);
+            });
+
+            builder.Entity<PartnerFileInfo>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "PartnerFileInfos", HaxpeConsts.DbSchema);
+                b.Property(p => p.Id);
+                b.Property(p => p.FileId);
+                b.Property(p => p.PartnerId);
+                b.HasIndex(p => p.PartnerId);
             });
         }
     }

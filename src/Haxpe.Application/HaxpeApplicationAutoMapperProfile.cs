@@ -22,6 +22,8 @@ using Haxpe.Workers;
 using Microsoft.AspNetCore.Identity;
 using Haxpe.Statistics;
 using Haxpe.V1.Statistics;
+using System.IO;
+using Haxpe.V1.Files;
 
 namespace Haxpe
 {
@@ -31,6 +33,7 @@ namespace Haxpe
         {
             CreateMap<Partner, PartnerV1Dto>();
             CreateMap<UpdatePartnerV1Dto, Partner>();
+            CreateMap<CreatePartnerV1Dto, Partner>();
             
             CreateMap<Worker, WorkerV1Dto>();
             CreateMap<UpdateWorkerV1Dto, Worker>();
@@ -61,6 +64,8 @@ namespace Haxpe
             CreateMap<WorkerLocationTracker, WorkerLocationTrackerV1Dto>();
 
             CreateMap<StatisticsModel, CountByDateV1Dto>();
+
+            CreateMap<Haxpe.Files.FileInfo, FileInfoDto>();
         }
     }
 }

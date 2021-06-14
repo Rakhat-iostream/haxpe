@@ -41,6 +41,7 @@ using Prometheus.DotNetRuntime;
 using SendGrid;
 using System;
 using System.Threading.Tasks;
+using Haxpe.V1.Files;
 using Haxpe.V1.Statistics;
 using Haxpe.Infrastructure.Statistics;
 using Microsoft.Extensions.Logging.Console;
@@ -110,6 +111,8 @@ namespace Haxpe
             services.AddScoped<ICouponV1Service, CouponV1Service>();
             services.AddScoped<IWorkerLocationTrackerV1Service, WorkerLocationTrackerV1Service>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFileStorage, LocalFileStorage>();
             services.AddScoped<IStatisticsService, StatisticsService>();
 
             services.AddDbContext<HaxpeDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
