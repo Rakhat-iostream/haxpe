@@ -4,14 +4,16 @@ using Haxpe.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Haxpe.Migrations
 {
     [DbContext(typeof(HaxpeMigrationsDbContext))]
-    partial class HaxpeMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210608081347_Add_Creation_Date")]
+    partial class Add_Creation_Date
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,8 +39,8 @@ namespace Haxpe.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ExternalId")
                         .HasColumnType("text");
@@ -109,8 +111,8 @@ namespace Haxpe.Migrations
                     b.Property<Guid?>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -130,8 +132,8 @@ namespace Haxpe.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -165,8 +167,8 @@ namespace Haxpe.Migrations
                     b.Property<Guid?>("CouponId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uuid");
@@ -227,8 +229,8 @@ namespace Haxpe.Migrations
                     b.Property<Guid?>("AddressId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -255,8 +257,8 @@ namespace Haxpe.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("IndustryId")
                         .HasColumnType("integer");
@@ -366,8 +368,8 @@ namespace Haxpe.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Latitude")
                         .HasColumnType("double precision");
@@ -394,8 +396,8 @@ namespace Haxpe.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<DateTimeOffset>("CreationDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("PartnerId")
                         .HasColumnType("uuid");

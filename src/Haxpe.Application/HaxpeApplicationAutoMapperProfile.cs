@@ -20,6 +20,8 @@ using Haxpe.V1.Workers;
 using Haxpe.WorkerLocationTrackers;
 using Haxpe.Workers;
 using Microsoft.AspNetCore.Identity;
+using Haxpe.Statistics;
+using Haxpe.V1.Statistics;
 
 namespace Haxpe
 {
@@ -57,6 +59,8 @@ namespace Haxpe
             CreateMap<Coupon, CouponV1Dto>();
 
             CreateMap<WorkerLocationTracker, WorkerLocationTrackerV1Dto>();
+
+            CreateMap<StatisticsModel, CountByDateV1Dto>();
         }
     }
 }

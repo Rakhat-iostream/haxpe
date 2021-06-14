@@ -12,6 +12,7 @@ namespace Haxpe.Workers
             PartnerId = partnerId;
             UserId = userId;
             ServiceTypes = new Collection<WorkerServiceType>();
+            CreationDate = DateTime.UtcNow;
         }
         
         private Worker() { }

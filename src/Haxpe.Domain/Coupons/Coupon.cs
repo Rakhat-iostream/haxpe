@@ -14,7 +14,7 @@ namespace Haxpe.Coupons
 
         public DateTimeOffset ExpirationDate { get; set; }
 
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset CreationDate { get; set; }
 
         public bool IsDeleted { get; set; }
 
@@ -27,7 +27,7 @@ namespace Haxpe.Coupons
         {
             Code = code ?? throw new ArgumentNullException(nameof(code));
             ExpirationDate = expirationDate;
-            CreatedDate = DateTimeOffset.UtcNow;
+            CreationDate = DateTimeOffset.UtcNow;
             Value = value;
             Unit = unit;
         }
