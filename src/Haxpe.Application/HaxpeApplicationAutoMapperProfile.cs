@@ -46,7 +46,10 @@ namespace Haxpe
             
             CreateMap<WorkerServiceType, WorkerServiceTypeV1Dto>();
             CreateMap<WorkerServiceTypeV1Dto, WorkerServiceType>();
-            
+
+            CreateMap<PartnerIndustryV1Dto, PartnersIndustry>();
+            CreateMap<PartnersIndustry, PartnerIndustryV1Dto>();
+
             CreateMap<Address, AddressV1Dto>();
             CreateMap<UpdateAddressV1Dto, Address>();
             

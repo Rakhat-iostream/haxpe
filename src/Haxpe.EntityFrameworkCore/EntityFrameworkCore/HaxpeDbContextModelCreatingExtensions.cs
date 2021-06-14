@@ -44,6 +44,8 @@ namespace Haxpe.EntityFrameworkCore
                 b.Property(x => x.Name).IsRequired().HasMaxLength(128);
                 b.Property(x => x.OwnerUserId).IsRequired();
                 b.HasIndex(x => new { x.OwnerUserId });
+                b.HasMany(x => x.Industries).WithOne();
+                b.Navigation(x => x.Industries).AutoInclude();
             });
 
             builder.Entity<Industry>(b =>
@@ -51,6 +53,12 @@ namespace Haxpe.EntityFrameworkCore
                 b.ToTable(HaxpeConsts.DbTablePrefix + "Industries", HaxpeConsts.DbSchema);
                 b.Property(p => p.Id).ValueGeneratedOnAdd();
                 b.Property(x => x.Key).IsRequired().HasMaxLength(128);
+            });
+
+            builder.Entity<PartnersIndustry>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "PartnersIndustries", HaxpeConsts.DbSchema);
+                b.HasKey(x => new { x.PartnerId, x.IndustryId });
             });
             
             builder.Entity<ServiceType>(b =>
