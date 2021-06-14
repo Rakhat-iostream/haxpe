@@ -18,8 +18,6 @@ namespace Haxpe.V1.Account
         [Required]
         public string LastName { get; set; }
 
-        public string FullName { get; set; }
-
         [Required]
         public string Phone { get; set; }
 

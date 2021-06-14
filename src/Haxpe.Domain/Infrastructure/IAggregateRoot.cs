@@ -9,5 +9,7 @@ namespace Haxpe.Infrastructure
     public interface IAggregateRoot<T>
     {
         public T Id { get; set; }
+
+        public DateTime CreationDate { get; set; }
     }
 }

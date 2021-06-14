@@ -1,27 +1,21 @@
-﻿using Newtonsoft.Json.Converters;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Globalization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Haxpe.Helpers
 {
-    public class DateTimeJsonConverter : JsonConverter<DateTimeOffset>
+    public class DateTimeJsonConverter : JsonConverter<DateTime>
     {
-        public override DateTimeOffset Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-       => DateTime.ParseExact(reader.GetString(),
-                    "yyyy-MM-dd", CultureInfo.InvariantCulture);
-
-
-        public override void Write(Utf8JsonWriter writer, DateTimeOffset value, JsonSerializerOptions options)
-       => writer.WriteStringValue(value.ToString(
-                    "yyyy-MM-dd", CultureInfo.InvariantCulture));
-    }
-    public class CustomDateTimeConverter : IsoDateTimeConverter
-    {
-        public CustomDateTimeConverter()
+        public override DateTime ReadJson(JsonReader reader, Type objectType, DateTime existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            base.DateTimeFormat = "yyyy-MM-dd";
+            throw new NotImplementedException();
+        }
+
+        public override void WriteJson(JsonWriter writer, DateTime value, JsonSerializer serializer)
+        {
+            writer.WriteValue(value.ToString(
+                    "yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
     }
 }

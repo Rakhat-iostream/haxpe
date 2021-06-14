@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 
 namespace Haxpe.Controllers.V1.Statistics
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class StatisticsController : ControllerBase
     {

@@ -14,7 +14,6 @@ namespace Haxpe.V1.Partners
         [MaxLength(512)]
         public string? Description { get; set; }
 
-        [MaxLength(256)]
         public Guid? AddressId { get; set; }
         
         [Required]

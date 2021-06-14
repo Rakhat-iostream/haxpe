@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
@@ -6,9 +8,12 @@ using Haxpe.Models;
 using Haxpe.Roles;
 using Haxpe.Users;
 using Haxpe.V1.Account;
+using Haxpe.V1.Files;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace Haxpe.V1.Partners
 {
@@ -20,14 +25,16 @@ namespace Haxpe.V1.Partners
     {
         private readonly UserManager<User> userManager;
         private readonly IPartnerV1Service partnerV1Service;
+        private readonly ICurrentUserService currentUserService;
 
         public PartnerV1Controller(
             UserManager<User> userManager,
-            IPartnerV1Service partnerV1Service
-        ) 
+            IPartnerV1Service partnerV1Service,
+            ICurrentUserService currentUserService)
         {
             this.userManager = userManager;
             this.partnerV1Service = partnerV1Service;
+            this.currentUserService = currentUserService;
         }
 
 
@@ -39,6 +46,14 @@ namespace Haxpe.V1.Partners
             return Response<PartnerV1Dto>.Ok(res);
         }
 
+        [Route("api/v1/partner/info")]
+        [HttpGet]
+        public async Task<Response<PartnerV1Dto>> GetInfoAsync()
+        {
+            var res = await partnerV1Service.GetByUserId(await this.currentUserService.GetCurrentUserIdAsync());
+            return Response<CustomerV1Dto>.Ok(res);
+        }
+        
         [Route("api/v1/partner/page")]
         [HttpGet]
         [Authorize(Roles = RoleConstants.Admin)]
@@ -58,46 +73,12 @@ namespace Haxpe.V1.Partners
 
         [Route("api/v1/partner")]
         [HttpPost]
-        public async Task<Response<PartnerV1Dto>> CreateAsync([FromBody] UpdatePartnerV1Dto input)
+        public async Task<Response<PartnerV1Dto>> CreateAsync([FromBody] CreatePartnerV1Dto input)
         {
             var res = await partnerV1Service.CreateAsync(input);
+            var user = await this.userManager.FindByIdAsync(res.OwnerUserId.ToString());
+            (await this.userManager.AddToRoleAsync(user, RoleConstants.Partner)).CheckErrors();
             return Response<PartnerV1Dto>.Ok(res);
-        }
-
-        [Authorize(Roles = RoleConstants.Admin)]
-        [Route("api/v1/partner/create-full")]
-        [HttpPost]
-        public async Task<Response<PartnerV1Dto>> CreateFullAsync([FromBody] CreatePartnerV1Dto input)
-        {
-            var partnerId = Guid.NewGuid();
-
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                UserName = input.OwnerEmail,
-                Email = input.OwnerEmail,
-                Name = input.OwnerFirstName,
-                Surname = input.OwnerLastName,
-                PhoneNumber = input.OwnerPhone,
-                PartnerId = partnerId
-            };
-            user.SetFullName(user.Name, user.Surname);
-
-            var res = await userManager.CreateAsync(user, "Pass!123");
-            res.CheckErrors();
-
-            await userManager.SetEmailAsync(user, input.OwnerEmail);
-            await userManager.AddToRoleAsync(user, RoleConstants.Partner);
-
-            var partner = await partnerV1Service.CreateAsync(new UpdatePartnerV1Dto {
-                Id = partnerId,
-                Name = input.Name,
-                OwnerId = user.Id,
-                Description = input.Description,
-                AddressId = input.AddressId }
-            );
-
-            return Response<PartnerV1Dto>.Ok(partner);
         }
 
         [Authorize(Roles = RoleConstants.Admin)]
@@ -116,6 +97,57 @@ namespace Haxpe.V1.Partners
         public async Task<Response> DeleteAsync(Guid id)
         {
             await partnerV1Service.DeleteAsync(id);
+            return Haxpe.Models.Response.Ok();
+        }
+
+        [Authorize(Roles = RoleConstants.Partner)]
+        [Route("api/v1/partner/{id}/upload-files")]
+        [HttpPost]
+        public async Task<Response<IReadOnlyCollection<FileInfoDto>>> UploadFileAsync(Guid id, IFormFileCollection uploads)
+        {
+            var files = new List<UploadFileDto>();
+            foreach (var uploadedFile in uploads)
+            {
+                var body = new MemoryStream();
+                await uploadedFile.CopyToAsync(body);
+                files.Add(new UploadFileDto
+                {
+                    Name = uploadedFile.FileName,
+                    Type = uploadedFile.ContentType,
+                    Body = body
+                });
+            }
+            var res = await this.partnerV1Service.UploadFiles(id, files);
+            return Response<IReadOnlyCollection<FileInfoDto>>.Ok(res);
+        }
+
+        [Authorize(Roles = RoleConstants.Partner + "," + RoleConstants.Admin)]
+        [Route("api/v1/partner/{id}/file")]
+        [HttpGet]
+        public async Task<Response<IReadOnlyCollection<FileInfoDto>>> GetFilesAsync(Guid id)
+        {
+            var res = await this.partnerV1Service.GetFiles(id);
+            return Response<IReadOnlyCollection<FileInfoDto>>.Ok(res);
+        }
+
+        [Authorize(Roles = RoleConstants.Partner + "," + RoleConstants.Admin)]
+        [Route("api/v1/partner/{id}/file/{fileId}")]
+        [HttpGet]
+        public async Task<FileStreamResult> GetFileAsync(Guid id, Guid fileId)
+        {
+            var (info, stream) = await this.partnerV1Service.GetFile(id, fileId);
+            return new FileStreamResult(stream, new MediaTypeHeaderValue(info.FileType))
+            {
+                FileDownloadName = info.FileName
+            };
+        }
+
+        [Authorize(Roles = RoleConstants.Partner)]
+        [Route("api/v1/partner/{id}/file/{fileId}")]
+        [HttpDelete]
+        public async Task<Response> DeleteFileAsync(Guid id, Guid fileId)
+        {
+            await this.partnerV1Service.DeleteFileAsync(id, fileId);
             return Haxpe.Models.Response.Ok();
         }
     }

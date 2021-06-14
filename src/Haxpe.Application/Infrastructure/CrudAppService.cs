@@ -41,6 +41,7 @@ namespace Haxpe.Infrastructure
         public virtual async Task<TEntityDto> CreateAsync(TCreateDto dto)
         {
             var root = this.mapper.Map<TRoot>(dto);
+            root.CreationDate = DateTime.UtcNow;
             var newRoot = await this.Repository.CreateAsync(root);
             return this.MapToGetOutputDto(newRoot);
         }

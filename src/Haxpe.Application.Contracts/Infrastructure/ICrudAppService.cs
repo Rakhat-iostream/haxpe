@@ -11,7 +11,7 @@ namespace Haxpe.Infrastructure
     {
     }
     
-    public interface ICrudAppService<TEntityDto, TId, TCreateDto, TUpdateDto> : ICrudAppService<TEntityDto, TId, TUpdateDto, TCreateDto, PagedAndSortedResultRequestDto>
+    public interface ICrudAppService<TEntityDto, TId, TCreateDto, TUpdateDto> : ICrudAppService<TEntityDto, TId, TCreateDto, TUpdateDto, PagedAndSortedResultRequestDto>
             where TEntityDto : EntityDto<TId>
     {
     }
