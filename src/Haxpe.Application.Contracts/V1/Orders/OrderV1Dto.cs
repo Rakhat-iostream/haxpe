@@ -35,5 +35,9 @@ namespace Haxpe.V1.Orders
         public string? Comment { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
+
+        public Guid? CouponId { get; set; }
+
+        public string? CouponCode { get; set; }
     }
 }
