@@ -97,7 +97,7 @@ namespace Haxpe.V1.Orders
 
             var userId = await this.currentUserService.GetCurrentUserIdAsync();
             var customer = await this.customerRepository.FindAsync(x => x.UserId == userId);
-            if (order.CustomerId == customer.Id)
+            if (order.CustomerId != customer.Id)
             {
                 throw new UnauthorizedAccessException();
             }
@@ -121,7 +121,7 @@ namespace Haxpe.V1.Orders
 
             var userId = await this.currentUserService.GetCurrentUserIdAsync();
             var customer = await this.customerRepository.FindAsync(x => x.UserId == userId);
-            if (order.CustomerId == customer.Id)
+            if (order.CustomerId != customer.Id)
             {
                 throw new UnauthorizedAccessException();
             }
