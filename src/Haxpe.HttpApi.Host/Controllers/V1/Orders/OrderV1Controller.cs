@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
@@ -44,9 +45,9 @@ namespace Haxpe.V1.Orders
 
         [HttpGet]
         [Route("api/v1/order")]
-        public async Task<Response<PagedResultDto<OrderV1Dto>>> Get([FromQuery] OrderListRequestV1Dto request)
+        public async Task<Response<IReadOnlyCollection<OrderV1Dto>>> Get([FromQuery] OrderListRequestV1Dto request)
         {
-            var res = await service.Get(request);
+            var res = await service.GetListAsync(request);
             return Response<OrderV1Dto>.Ok(res);
         }
 

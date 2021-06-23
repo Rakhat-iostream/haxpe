@@ -10,5 +10,7 @@ namespace Haxpe.V1.Orders
         public Guid? CustomerId { get; set; }
         
         public OrderStatus? Status { get; set; }
+
+        public bool? IsActive { get; set; }
     }
 }

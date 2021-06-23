@@ -121,5 +121,16 @@ namespace Haxpe.Orders
             CouponId = coupon.Id;
             CouponCode = coupon.Code;
         }
+
+        public static OrderStatus[] GetActiveOrderStatus()
+        {
+            return new OrderStatus[]
+            {
+                OrderStatus.Draft,
+                OrderStatus.Created,
+                OrderStatus.WorkerFound,
+                OrderStatus.InProgress
+            };
+        }
     }
 }

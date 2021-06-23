@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Haxpe.Coupons;
@@ -147,9 +149,34 @@ namespace Haxpe.V1.Orders
             return this.mapper.Map<Order, OrderV1Dto>(order);
         }
 
-        public async Task<PagedResultDto<OrderV1Dto>> Get(OrderListRequestV1Dto request)
+        public async Task<IReadOnlyCollection<OrderV1Dto>> GetListAsync(OrderListRequestV1Dto request)
         {
-            throw new NotImplementedException();
+            var query = PredicateBuilder.True<Order>();
+            if(request.CustomerId.HasValue)
+            {
+                query = query.And(order => order.CustomerId == request.CustomerId.Value);
+            }
+            if (request.WorkerId.HasValue)
+            {
+                query = query.And(order => order.WorkerId == request.WorkerId.Value);
+            }
+            if (request.Status.HasValue)
+            {
+                query = query.And(order => order.OrderStatus == request.Status.Value);
+            }
+            if (request.IsActive.HasValue)
+            {
+                query = query.And(this.IsActive());
+            }
+
+            var res = await this.orderRepository.GetListAsync(query);
+            return this.mapper.Map<IReadOnlyCollection<OrderV1Dto>>(res);
+        }
+
+        private Expression<Func<Order, bool>> IsActive()
+        {
+            var activeOrderStatus = Order.GetActiveOrderStatus();
+            return PredicateBuilder.Create<Order>(order => activeOrderStatus.Contains(order.OrderStatus));
         }
 
         public async Task<OrderV1Dto> GetOrder(Guid id)

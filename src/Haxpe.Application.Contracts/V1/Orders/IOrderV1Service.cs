@@ -1,5 +1,6 @@
 using Haxpe.Infrastructure;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Haxpe.V1.Orders
@@ -15,8 +16,8 @@ namespace Haxpe.V1.Orders
         Task<OrderV1Dto> CancelOrder(Guid orderId);
 
         Task<OrderV1Dto> GetOrder(Guid id);
-        
-        Task<PagedResultDto<OrderV1Dto>> Get(OrderListRequestV1Dto request);
+
+        Task<IReadOnlyCollection<OrderV1Dto>> GetListAsync(OrderListRequestV1Dto query);
 
         Task<OrderV1Dto> AssignWorker(Guid id, Guid workerId);
         
