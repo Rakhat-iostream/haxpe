@@ -74,6 +74,7 @@ namespace Haxpe.EntityFrameworkCore
                 b.Property(p => p.Id);
                 b.HasIndex(x => new { x.PartnerId, x.UserId }).IsUnique();
                 b.HasMany(x => x.ServiceTypes).WithOne();
+                b.Navigation(x => x.ServiceTypes).AutoInclude();
             });
             
             builder.Entity<WorkerServiceType>(b =>

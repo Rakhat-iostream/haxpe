@@ -12,7 +12,7 @@ namespace Haxpe.V1.Workers
         [Required]
         public Guid UserId { get; set; }
         
-        public ICollection<WorkerServiceTypeV1Dto> WorkerServiceTypes { get; set; } = null!;
+        public ICollection<WorkerServiceTypeV1Dto> ServiceTypes { get; set; } = null!;
         
     }
 }

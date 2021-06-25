@@ -89,7 +89,7 @@ namespace Haxpe.V1.Workers
             {
                 PartnerId = input.PartnerId,
                 UserId = user.Id,
-                WorkerServiceTypes = input.WorkerServiceTypes
+                ServiceTypes = input.ServiceTypes
             });
 
             return Response<WorkerV1Dto>.Ok(res);
