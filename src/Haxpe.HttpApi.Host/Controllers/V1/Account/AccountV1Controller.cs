@@ -4,9 +4,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Haxpe.Models;
+using Haxpe.Users;
 using Haxpe.V1.Common;
+using Haxpe.V1.Events;
 using Haxpe.V1.Facebook;
 using Haxpe.V1.Google;
+using JWT;
+using JWT.Algorithms;
+using JWT.Serializers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Facebook;
@@ -23,10 +28,19 @@ namespace Haxpe.V1.Account
     public class AccountV1Controller : ControllerBase
     {
         private readonly IAccountAppService service;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IJwtEncoder encoder;
+        private readonly CentrifugoSettings settings;
 
-        public AccountV1Controller(IAccountAppService service)
+        public AccountV1Controller(IAccountAppService service, ICurrentUserService currentUserService, CentrifugoSettings settings)
         {
             this.service = service;
+            this.currentUserService = currentUserService;
+            IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
+            IJsonSerializer serializer = new JsonNetSerializer();
+            IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
+            this.encoder = new JwtEncoder(algorithm, serializer, urlEncoder);
+            this.settings = settings;
         }
 
         [HttpPost]
@@ -115,6 +129,19 @@ namespace Haxpe.V1.Account
         {
             var res = await service.GoogleLogin(credentials);
             return Response<UserProfileDto>.Ok(res);
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("api/v1/account/websocket-token")]
+        public async Task<Response<string>> GetWebsocketToken()
+        {
+            var payload = new Dictionary<string, object>
+            {
+                { "sub", await this.currentUserService.GetCurrentUserIdAsync() },
+            };
+            var token = this.encoder.Encode(payload, this.settings.Secret);
+            return Response<string>.Ok(token);
         }
     }
 }

@@ -45,6 +45,7 @@ using Haxpe.V1.Files;
 using Haxpe.V1.Statistics;
 using Haxpe.Infrastructure.Statistics;
 using Microsoft.Extensions.Logging.Console;
+using Haxpe.V1.Events;
 
 namespace Haxpe
 {
@@ -98,6 +99,8 @@ namespace Haxpe
             services.AddSingleton<ICallbackUrlService, CallbackUrlService>();
 
             services.AddSingleton<SendGridClient>(new SendGridClient(Configuration["SendGrid:ApiKey"]));
+            services.AddSingleton(Configuration.GetSection("Centrifugo").Get<CentrifugoSettings>());
+            services.AddScoped<IEventEmitter, EventEmitter>();
 
             services.AddScoped<IAccountAppService, AccountAppService>();
             services.AddScoped<IAddressV1Service, AddressV1Service>();

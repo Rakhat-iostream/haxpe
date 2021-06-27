@@ -19,8 +19,8 @@ namespace Haxpe.V1.Google
             var request = new HttpRequestMessage(HttpMethod.Get,
                 $"https://oauth2.googleapis.com/tokeninfo?id_token={credentials.AccessToken}"
                 );
-            var customer = this.factory.CreateClient();
-            var response = await customer.SendAsync(request);
+            var client = this.factory.CreateClient();
+            var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {

@@ -12,6 +12,7 @@ using Haxpe.Partners;
 using Haxpe.Roles;
 using Haxpe.Taxes;
 using Haxpe.Users;
+using Haxpe.V1.Events;
 using Haxpe.Workers;
 
 namespace Haxpe.V1.Orders
@@ -26,6 +27,7 @@ namespace Haxpe.V1.Orders
         private readonly IRepository<Coupon, Guid> couponRepository;
         private readonly ITaxProvider taxProvider;
         private readonly ICurrentUserService currentUserService;
+        private readonly IEventEmitter eventEmitter;
 
         public OrderV1Service(
             IRepository<Order, Guid> orderRepository,
@@ -36,6 +38,7 @@ namespace Haxpe.V1.Orders
             IRepository<Coupon, Guid> couponRepository,
             ITaxProvider taxProvider,
             ICurrentUserService currentUserService,
+            IEventEmitter eventEmitter,
             IMapper mapper) : base(mapper)
         {
             this.orderRepository = orderRepository;
@@ -46,6 +49,7 @@ namespace Haxpe.V1.Orders
             this.taxProvider = taxProvider;
             this.currentUserService = currentUserService;
             this.couponRepository = couponRepository;
+            this.eventEmitter = eventEmitter;
         }
 
         public async Task<OrderV1Dto> ApplyCoupon(Guid id, ApplyCouponDto model)
@@ -62,7 +66,10 @@ namespace Haxpe.V1.Orders
                 throw new BusinessException(HaxpeDomainErrorCodes.CouponNotFound);
             }
             order.ApplyCoupon(coupon);
-            return this.mapper.Map<OrderV1Dto>(order);
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
 
         public async Task<OrderV1Dto> AssignWorker(Guid id, Guid workerId)
@@ -86,7 +93,10 @@ namespace Haxpe.V1.Orders
                 }
             }
             order.AssignWorker(worker);
-            return this.mapper.Map<Order, OrderV1Dto>(order);
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
 
         public async Task<OrderV1Dto> CancelOrder(Guid id)
@@ -105,7 +115,10 @@ namespace Haxpe.V1.Orders
             }
 
             order.Cancel();
-            return this.mapper.Map<Order, OrderV1Dto>(order);
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
 
         public async Task<OrderV1Dto> CompleteJob(Guid id)
@@ -129,7 +142,10 @@ namespace Haxpe.V1.Orders
             }
 
             order.Confirm();
-            return this.mapper.Map<Order, OrderV1Dto>(order);
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
 
         public async Task<OrderV1Dto> CreateOrder(CreateOrderV1Dto orderRequest)
@@ -146,7 +162,10 @@ namespace Haxpe.V1.Orders
                 OrderStatus.Draft);
 
             await orderRepository.CreateAsync(order);
-            return this.mapper.Map<Order, OrderV1Dto>(order);
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
 
         public async Task<IReadOnlyCollection<OrderV1Dto>> GetListAsync(OrderListRequestV1Dto request)
@@ -235,125 +254,17 @@ namespace Haxpe.V1.Orders
         {
             throw new NotImplementedException();
         }
-        /*
-public async Task<OrderV1Dto> CreateOrder(CreateOrderV1Dto orderRequest)
-{
-var serviceType = await _serviceTypeRepository.FindAsync(orderRequest.ServiceTypeId);
-var order = new Order(Guid.NewGuid(),
-orderRequest.CustomerId,
-orderRequest.AddressId,
-DateTimeOffset.Now,
-serviceType.IndustryId,
-serviceType.Id,
-Enum.Parse<PaymentMethod>(orderRequest.PaymentMethod),
-_taxProvider.GetTax(),
-OrderStatus.Created);
 
-await _orderRepository.CreateAsync(order);
-return this.mapper.Map<Order, OrderV1Dto>(order);
-}
+        private async Task OrderChangedNotify(OrderV1Dto dto)
+        {
+            var customer = await this.customerRepository.FindAsync(dto.CustomerId);
+            await this.eventEmitter.SendEvent(customer.UserId, new OrderChangedEvent() { Payload = dto });
 
-public async Task<OrderV1Dto> GetOrder(Guid id)
-{
-var order = await _orderRepository.FindAsync(id);
-
-if (order.OrderStatus == OrderStatus.Created)
-{
-return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-
-if (CurrentUser.IsInRole(RoleConstants.Admin))
-{
-return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-else if (CurrentUser.IsInRole(RoleConstants.Customer))
-{
-if (order.CustomerId == CurrentUser.Id)
-{
-  return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-}
-else if (CurrentUser.IsInRole(RoleConstants.Worker))
-{
-var worker = await _workerRepository.FindAsync(x => x.UserId == CurrentUser.Id);
-if (order.WorkerId == worker.Id)
-{
-  return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-}
-else if (CurrentUser.IsInRole(RoleConstants.Partner))
-{
-var partner = await _partnerRepository.FindAsync(x => x.OwnerUserId == CurrentUser.Id);
-if (order.PartnerId == partner.Id)
-{
-  return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-}
-throw new BusinessException("Access denied");
-}
-
-public Task<PagedResultDto<OrderV1Dto>> Get(OrderListRequestV1Dto request)
-{
-throw new NotImplementedException();
-}
-
-public async Task<OrderV1Dto> AssignWorker(Guid id, Guid workerId)
-{
-CheckPermission(RoleConstants.Admin, RoleConstants.Partner, RoleConstants.Worker);
-var order = await _orderRepository.FindAsync(id);
-var worker = await _workerRepository.FindAsync(workerId);
-
-if (CurrentUser.IsInRole(RoleConstants.Partner))
-{
-var partner = await _partnerRepository.FindAsync(x => x.OwnerUserId == CurrentUser.Id);
-if (worker.PartnerId != partner.Id)
-{
-  throw new BusinessException("Can't assign a worker from other partner");
-}
-}
-order.AssignWorker(worker);
-await CurrentUnitOfWork.SaveChangesAsync();
-
-return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-
-public async Task<OrderV1Dto> StartJob(Guid id)
-{
-CheckPermission(RoleConstants.Worker);
-var order = await _orderRepository.FindAsync(id);
-var worker = await _workerRepository.FindAsync(x => x.UserId == CurrentUser.Id);
-if (order.WorkerId != worker.Id)
-{
-throw new BusinessException("Access denied");
-}
-order.StartJob();
-await CurrentUnitOfWork.SaveChangesAsync();
-
-return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-
-public async Task<OrderV1Dto> CompleteJob(Guid id)
-{
-CheckPermission(RoleConstants.Worker);
-var order = await _orderRepository.FindAsync(id);
-var worker = await _workerRepository.FindAsync(x => x.UserId == CurrentUser.Id);
-if (order.WorkerId != worker.Id)
-{
-throw new BusinessException("Access denied");
-}
-order.CompleteJob();
-await CurrentUnitOfWork.SaveChangesAsync();
-
-return this.mapper.Map<Order, OrderV1Dto>(order);
-}
-
-private void CheckPermission(params string[] roles)
-{
-if (!roles.Any(r => CurrentUser.IsInRole(r)))
-{
-throw new BusinessException("Access denied");
-}
-}
-*/
+            if (dto.WorkerId.HasValue)
+            {
+                var worker = await this.workerRepository.FindAsync(dto.WorkerId.Value);
+                await this.eventEmitter.SendEvent(worker.UserId, new OrderChangedEvent() { Payload = dto });
+            }
+        }
     }
 }

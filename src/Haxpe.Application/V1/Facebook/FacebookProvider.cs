@@ -19,8 +19,8 @@ namespace Haxpe.V1.Facebook
             var request = new HttpRequestMessage(HttpMethod.Get,
                 $"https://graph.facebook.com/{credentials.UserId}?fields=email,last_name,name,first_name&access_token={credentials.AccessToken}"
                 );
-            var customer = this.factory.CreateClient();
-            var response = await customer.SendAsync(request);
+            var client = this.factory.CreateClient();
+            var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
