@@ -97,6 +97,7 @@ namespace Haxpe
             services.AddSingleton<ITemplateRenderer, TemplateRenderer>();
             services.AddSingleton<IEmailSender, SendGridEmailSender>();
             services.AddSingleton<ICallbackUrlService, CallbackUrlService>();
+            services.AddSingleton<IPasswordsGenService, PasswordsGenService>();
 
             services.AddSingleton<SendGridClient>(new SendGridClient(Configuration["SendGrid:ApiKey"]));
             services.AddSingleton(Configuration.GetSection("Centrifugo").Get<CentrifugoSettings>());

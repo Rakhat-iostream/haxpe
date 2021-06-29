@@ -5,8 +5,13 @@ using Haxpe.Infrastructure;
 using Haxpe.Models;
 using Haxpe.Partners;
 using Haxpe.Roles;
+using Haxpe.Services;
 using Haxpe.Users;
 using Haxpe.V1.Account;
+using Haxpe.V1.Common;
+using Haxpe.V1.Constants;
+using Haxpe.V1.Emails;
+using Haxpe.V1.Partners;
 using Haxpe.Workers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -21,15 +26,26 @@ namespace Haxpe.V1.Workers
     public class WorkerV1Controller : ControllerBase
     {
         private readonly IWorkerV1Service workerV1Service;
+        private readonly IPartnerV1Service partnerV1Service;
         private readonly UserManager<User> _userManager;
+        private readonly IEmailService _emailService;
+        private readonly ICallbackUrlService _callbackUrlService;
+        private readonly IPasswordsGenService _passwordsGenService;
 
         public WorkerV1Controller(
             IWorkerV1Service workerV1Service,
-            UserManager<User> userManager
-        ) 
+            IPartnerV1Service partnerV1Service,
+            UserManager<User> userManager,
+             IEmailService emailService,
+            ICallbackUrlService callbackUrlService,
+            IPasswordsGenService passwordsGenService) 
         {
             this.workerV1Service = workerV1Service;
+            this.partnerV1Service = partnerV1Service;
             _userManager = userManager;
+            _emailService = emailService;
+            _callbackUrlService = callbackUrlService;
+            _passwordsGenService = passwordsGenService;
         }
 
         [Route("api/v1/worker/{id}")]
@@ -81,7 +97,8 @@ namespace Haxpe.V1.Workers
             };
             user.SetFullName(user.Name, user.Surname);
 
-            (await _userManager.CreateAsync(user, "Pass!123")).CheckErrors();
+            var password = await _passwordsGenService.GetRandomAlphaNumeric();
+            (await _userManager.CreateAsync(user, password)).CheckErrors();
 
             await _userManager.AddToRoleAsync(user, RoleConstants.Partner);
 
@@ -91,6 +108,23 @@ namespace Haxpe.V1.Workers
                 UserId = user.Id,
                 ServiceTypes = input.ServiceTypes
             });
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = _callbackUrlService.GetUrl(new CallbackUrlModel()
+            {
+                Path = FrontUrls.WorkerConfirmEmailCallback
+            }, new { Id = user.Id, code = code });
+
+            var partnerName = await partnerV1Service.FindAsync(input.PartnerId);
+            
+            await _emailService.SendWorkerRegistrationConfirm(user.Email, user.PreferLanguage ?? "en", new WorkerRegistrationConfirmModel()
+            {
+                PartnerName = $"{partnerName.Name};",
+                WorkerName = $"{user.FullName}",
+                Password = password,
+                ConfirmLink = callbackUrl
+            });
+
 
             return Response<WorkerV1Dto>.Ok(res);
         }
