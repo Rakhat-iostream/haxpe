@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="IdentityModel" Version="5.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="5.0.0" />
     <PackageReference Include="RazorLight" Version="2.0.0-rc.3" />
@@ -28,5 +29,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Emails\**\*.*" />
     <Content Remove="Emails\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Emails\PartnerRegistrationConfirm\de.cshtml" />
+    <None Remove="Emails\PartnerRegistrationConfirm\en.cshtml" />
+    <None Remove="Emails\WorkerRegistrationConfirm\de.cshtml" />
+    <None Remove="Emails\WorkerRegistrationConfirm\en.cshtml" />
   </ItemGroup>
 </Project>

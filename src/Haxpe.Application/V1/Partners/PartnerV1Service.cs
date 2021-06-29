@@ -95,7 +95,7 @@ namespace Haxpe.V1.Partners
         public async Task DeleteFileAsync(Guid partnerId, Guid fileId)
         {
             var partnerFile = await this.partnerFileReporistory.FindAsync(x => x.PartnerId == partnerId && x.FileId == fileId);
-            if(partnerFile == null)
+            if (partnerFile == null)
             {
                 throw new BusinessException(HaxpeDomainErrorCodes.NotFound);
             }

@@ -1,4 +1,4 @@
-﻿@model Haxpe.V1.Emails.CustomerRegistrationConfirmModel
+﻿@model Haxpe.V1.Emails.PartnerRegistrationConfirmModel
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -23,32 +23,32 @@
     <table cellpadding="0" cellspacing="0" border="0" align="center" width="530" bgcolor="#ffffff" style="padding: 50px 20px">
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0 0 15px;">
-                <strong>Thank you for registering, @Model.CustomerName!</strong>
+                <strong>Vielen Dank für die Registrierung, @Model.PartnerName!</strong>
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0 0 15px;">
-                In order to be able to process your registration further, please confirm your e-mail address.
+                Um Ihre Registrierung weiter bearbeiten zu können, bestätigen Sie bitte Ihre E-Mail-Adresse.
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="49" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:16px;mso-line-height-rule: exactly;line-height:30px;color:#ffffff; padding: 15px 0;">
-                <a href="@Model.CallbackUrl" style="background: #31C963; border-radius: 32.5px; color: #ffffff; text-decoration: none; padding: 16px 40px;">Confirm email address</a>
+                <a href="@Model.ConfirmLink" style="background: #31C963; border-radius: 32.5px; color: #ffffff; text-decoration: none; padding: 16px 40px;">E-Mail-Adresse bestätigen</a>
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0;">
-                We also need the following documents from you:
+                Desweiteren benötigen wir folgende Unterlagen von Ihnen:
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0 0 5px;">
-                - Business license, business registration, extract from the commercial register
+                - Gewerbeschein, Gewerbe-Anmeldung, Handelsregister-Auszug
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0 0 5px;">
-                - Knowledge, qualifications, certificates, master craftsman's certificate (if available)
+                - Kenntnisse, Qualifikationen, Zeugnisse, Meisterbrief (falls vorhanden)
             </td>
         </tr>
         <tr>
@@ -58,42 +58,42 @@
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0 0 5px;">
-                - Tax number / tax ID (if not already specified)
+                - Betriebshaftpflicht-Versicherung
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 0 0 5px;">
-                - Certificate of exemption for construction work (if available)
+                - Freistellungsbescheinigung für Bauleistungen (falls vorhanden)
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 20px 0 0;">
-                Please upload your documents here:
+                Bitte laden Sie Ihre Dokumente hier hoch:
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="49" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:16px;mso-line-height-rule: exactly;line-height:30px;color:#ffffff; padding: 15px 0;">
-                <a href="javascript:void(0);" style="background: #4385F3; border-radius: 32.5px; color: #ffffff; text-decoration: none; padding: 16px 88px;">File upload</a>
+                <a href="@Model.UploadDocumentLink" style="background: #4385F3; border-radius: 32.5px; color: #ffffff; text-decoration: none; padding: 16px 88px;">Datei-Upload</a>
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 20px 0 0;">
-                We will then check your data and activate you as a Haxpe partner as soon as possible.
+                Wir werden Ihre Daten anschließend überprüfen und schalten Sie so schnell wie möglich als Partner von Haxpe frei.
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 20px 0 0;">
-                You are only allowed to carry out or offer the trades which are entered in your trade license or extract from the commercial register. Otherwise you are responsible for it.
+                Sie dürfen nur die Gewerbe ausführen bzw. anbieten welche in Ihrem Gewerbeschein oder Handelsregister-Auszug eingetragen sind. Andernfalls tragen Sie die Haftung dafür.
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 20px 0 0;">
-                With best regards,
+                Mit freundlichen Grüßen,
             </td>
         </tr>
         <tr>
             <td valign="middle" width="530" height="24" align="left" bgcolor="#ffffff" style="text-align:left;font-family:Arial, Helvetica, sans-serif;font-size:17px;mso-line-height-rule: exactly;line-height:24px;color:#000000;padding: 50px 0 0;">
-                <strong>Your Haxpe team</strong>
+                <strong>Ihr Haxpe Team</strong>
             </td>
         </tr>
     </table>
@@ -119,8 +119,8 @@
         </tr>
         <tr>
             <td valign="middle" width="530" height="30" align="center" bgcolor="#232624" style="text-align:center;font-family:Arial, Helvetica, sans-serif;font-size:16px;mso-line-height-rule: exactly;line-height:30px;color:#232624;">
-                <a href="javascript:void(0);" style="color: #fff; text-decoration: none; margin: 0 5px">Imprint</a>
-                <a href="javascript:void(0);" style="color: #fff; text-decoration: none; margin: 0 5px">Privacy Policy</a>
+                <a href="javascript:void(0);" style="color: #fff; text-decoration: none; margin: 0 5px">Impressum</a>
+                <a href="javascript:void(0);" style="color: #fff; text-decoration: none; margin: 0 5px">Datenschutzerklärung</a>
             </td>
         </tr>
         <tr>

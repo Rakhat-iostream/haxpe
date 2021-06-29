@@ -7,5 +7,7 @@
         public string WorkerName { get; set; }
 
         public string ConfirmLink { get; set; }
+
+        public string Password { get; set; }
     }
 }
