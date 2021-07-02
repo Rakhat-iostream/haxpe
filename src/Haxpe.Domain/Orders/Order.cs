@@ -99,15 +99,14 @@ namespace Haxpe.Orders
 
         public void Cancel()
         {
-            if (OrderStatus != OrderStatus.Draft)
-            {
-                throw new BusinessException(HaxpeDomainErrorCodes.OrderWorkflowViolation);
-            }
             if (OrderStatus == OrderStatus.Draft || OrderStatus == OrderStatus.Created)
             {
                 OrderStatus = OrderStatus.Canceled;
             }
-            OrderStatus = OrderStatus.Canceled;
+            else
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.OrderWorkflowViolation);
+            }
         }
 
         public void CompleteJob()
