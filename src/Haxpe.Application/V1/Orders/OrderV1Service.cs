@@ -142,7 +142,6 @@ namespace Haxpe.V1.Orders
             }
 
             order.Confirm();
-
             var res = this.mapper.Map<OrderV1Dto>(order);
             await this.OrderChangedNotify(res);
             return res;
@@ -162,7 +161,6 @@ namespace Haxpe.V1.Orders
                 OrderStatus.Draft);
 
             await orderRepository.CreateAsync(order);
-
             var res = this.mapper.Map<OrderV1Dto>(order);
             await this.OrderChangedNotify(res);
             return res;

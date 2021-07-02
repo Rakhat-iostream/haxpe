@@ -103,6 +103,10 @@ namespace Haxpe.Orders
             {
                 throw new BusinessException(HaxpeDomainErrorCodes.OrderWorkflowViolation);
             }
+            if (OrderStatus == OrderStatus.Draft || OrderStatus == OrderStatus.Created)
+            {
+                OrderStatus = OrderStatus.Canceled;
+            }
             OrderStatus = OrderStatus.Canceled;
         }
 
