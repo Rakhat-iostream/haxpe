@@ -100,7 +100,7 @@ namespace Haxpe.V1.Workers
             var password = await _passwordsGenService.GetRandomAlphaNumeric();
             (await _userManager.CreateAsync(user, password)).CheckErrors();
 
-            await _userManager.AddToRoleAsync(user, RoleConstants.Partner);
+            await _userManager.AddToRoleAsync(user, RoleConstants.Worker);
 
             var res =  await workerV1Service.CreateAsync(new UpdateWorkerV1Dto()
             {
