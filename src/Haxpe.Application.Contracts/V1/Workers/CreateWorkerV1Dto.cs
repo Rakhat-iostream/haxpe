@@ -25,7 +25,7 @@ namespace Haxpe.V1.Workers
         [MaxLength(12)]
         public string Phone { get; set; } = null!;
         
-        public ICollection<WorkerServiceTypeV1Dto> ServiceTypes { get; set; } = null!;
+        public ICollection<WorkerServiceTypeV1Dto>? ServiceTypes { get; set; }
         
     }
 }

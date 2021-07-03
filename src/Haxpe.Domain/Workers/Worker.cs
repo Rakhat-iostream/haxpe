@@ -21,6 +21,6 @@ namespace Haxpe.Workers
         
         public Guid UserId { get; private set; }
 
-        public ICollection<WorkerServiceType> ServiceTypes { get; set; }
+        public ICollection<WorkerServiceType>? ServiceTypes { get; set; }
     }
 }
