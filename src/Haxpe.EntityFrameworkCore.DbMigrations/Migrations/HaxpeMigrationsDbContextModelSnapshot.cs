@@ -78,8 +78,8 @@ namespace Haxpe.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<DateTimeOffset>("CreationDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTimeOffset>("ExpirationDate")
                         .HasColumnType("timestamp with time zone");
@@ -476,18 +476,13 @@ namespace Haxpe.Migrations
 
             modelBuilder.Entity("Haxpe.Workers.WorkerServiceType", b =>
                 {
-                    b.Property<int>("WorkerId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("WorkerId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("ServiceTypeId")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("WorkerId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("WorkerId", "ServiceTypeId");
-
-                    b.HasIndex("WorkerId1");
 
                     b.ToTable("HaxpeWorkerServiceTypes");
                 });
@@ -633,7 +628,9 @@ namespace Haxpe.Migrations
                 {
                     b.HasOne("Haxpe.Workers.Worker", null)
                         .WithMany("ServiceTypes")
-                        .HasForeignKey("WorkerId1");
+                        .HasForeignKey("WorkerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
