@@ -34,7 +34,7 @@ namespace Haxpe.Controllers.V1.Users
 
         [Route("api/v1/user/page")]
         [HttpGet]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleConstants.Admin + "," + RoleConstants.Worker + "," + RoleConstants.Partner)]
         public async Task<Response<PagedResultDto<UserV1Dto>>> GetPageAsync([FromQuery] PagedAndSortedResultRequestDto input)
         {
             var res = await _service.GetPageAsync(input);
@@ -43,7 +43,7 @@ namespace Haxpe.Controllers.V1.Users
 
         [Route("api/v1/user")]
         [HttpGet]
-        [Authorize(Roles = RoleConstants.Admin)]
+        [Authorize(Roles = RoleConstants.Admin + "," + RoleConstants.Worker + "," + RoleConstants.Partner)]
         public async Task<Response<IReadOnlyCollection<UserV1Dto>>> GetListAsync([FromQuery] UserListQuery input)
         {
             var res = await _service.GetListAsync(input);
