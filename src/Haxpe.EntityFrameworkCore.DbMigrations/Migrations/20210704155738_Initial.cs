@@ -33,6 +33,7 @@ namespace Haxpe.Migrations
                     PartnerId = table.Column<Guid>(type: "uuid", nullable: true),
                     PreferLanguage = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: true),
                     IsExternal = table.Column<bool>(type: "boolean", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -65,11 +66,29 @@ namespace Haxpe.Migrations
                     ZipCode = table.Column<string>(type: "text", nullable: false),
                     Lon = table.Column<double>(type: "double precision", nullable: false),
                     Lat = table.Column<double>(type: "double precision", nullable: false),
-                    ExternalId = table.Column<string>(type: "text", nullable: true)
+                    ExternalId = table.Column<string>(type: "text", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HaxpeAddresses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HaxpeCoupon",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Code = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    ExpirationDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
+                    Value = table.Column<decimal>(type: "numeric", nullable: false),
+                    Unit = table.Column<int>(type: "integer", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HaxpeCoupon", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -78,11 +97,26 @@ namespace Haxpe.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AddressId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HaxpeCustomers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HaxpeFileInfos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    FileName = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    FileType = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HaxpeFileInfos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,7 +125,8 @@ namespace Haxpe.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Key = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false)
+                    Key = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,11 +153,28 @@ namespace Haxpe.Migrations
                     TotalAmount = table.Column<decimal>(type: "numeric", nullable: true),
                     Rating = table.Column<float>(type: "real", nullable: true),
                     Comment = table.Column<string>(type: "text", nullable: true),
-                    OrderStatus = table.Column<int>(type: "integer", nullable: false)
+                    OrderStatus = table.Column<int>(type: "integer", nullable: false),
+                    CouponId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CouponCode = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HaxpeOrders", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HaxpePartnerFileInfos",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PartnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FileId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HaxpePartnerFileInfos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -133,7 +185,9 @@ namespace Haxpe.Migrations
                     Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
                     OwnerUserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    AddressId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AddressId = table.Column<Guid>(type: "uuid", nullable: true),
+                    NumberOfWorkers = table.Column<int>(type: "integer", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -147,11 +201,28 @@ namespace Haxpe.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IndustryId = table.Column<int>(type: "integer", nullable: false),
-                    Key = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false)
+                    Key = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HaxpeServiceTypes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HaxpeWorkerLocationTracker",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WorkerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UpdateDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    Longitude = table.Column<double>(type: "double precision", nullable: false),
+                    Latitude = table.Column<double>(type: "double precision", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HaxpeWorkerLocationTracker", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -160,7 +231,8 @@ namespace Haxpe.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PartnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -274,22 +346,39 @@ namespace Haxpe.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HaxpePartnersIndustries",
+                columns: table => new
+                {
+                    PartnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IndustryId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HaxpePartnersIndustries", x => new { x.PartnerId, x.IndustryId });
+                    table.ForeignKey(
+                        name: "FK_HaxpePartnersIndustries_HaxpePartners_PartnerId",
+                        column: x => x.PartnerId,
+                        principalTable: "HaxpePartners",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "HaxpeWorkerServiceTypes",
                 columns: table => new
                 {
-                    WorkerId = table.Column<int>(type: "integer", nullable: false),
-                    ServiceTypeId = table.Column<int>(type: "integer", nullable: false),
-                    WorkerId1 = table.Column<Guid>(type: "uuid", nullable: true)
+                    WorkerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ServiceTypeId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_HaxpeWorkerServiceTypes", x => new { x.WorkerId, x.ServiceTypeId });
                     table.ForeignKey(
-                        name: "FK_HaxpeWorkerServiceTypes_HaxpeWorkers_WorkerId1",
-                        column: x => x.WorkerId1,
+                        name: "FK_HaxpeWorkerServiceTypes_HaxpeWorkers_WorkerId",
+                        column: x => x.WorkerId,
                         principalTable: "HaxpeWorkers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -350,6 +439,11 @@ namespace Haxpe.Migrations
                 column: "ZipCode");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HaxpeCoupon_Code",
+                table: "HaxpeCoupon",
+                column: "Code");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HaxpeCustomers_UserId",
                 table: "HaxpeCustomers",
                 column: "UserId",
@@ -371,20 +465,25 @@ namespace Haxpe.Migrations
                 column: "WorkerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_HaxpePartnerFileInfos_PartnerId",
+                table: "HaxpePartnerFileInfos",
+                column: "PartnerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_HaxpePartners_OwnerUserId",
                 table: "HaxpePartners",
                 column: "OwnerUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HaxpeWorkerLocationTracker_WorkerId",
+                table: "HaxpeWorkerLocationTracker",
+                column: "WorkerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HaxpeWorkers_PartnerId_UserId",
                 table: "HaxpeWorkers",
                 columns: new[] { "PartnerId", "UserId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HaxpeWorkerServiceTypes_WorkerId1",
-                table: "HaxpeWorkerServiceTypes",
-                column: "WorkerId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -408,7 +507,13 @@ namespace Haxpe.Migrations
                 name: "HaxpeAddresses");
 
             migrationBuilder.DropTable(
+                name: "HaxpeCoupon");
+
+            migrationBuilder.DropTable(
                 name: "HaxpeCustomers");
+
+            migrationBuilder.DropTable(
+                name: "HaxpeFileInfos");
 
             migrationBuilder.DropTable(
                 name: "HaxpeIndustries");
@@ -417,10 +522,16 @@ namespace Haxpe.Migrations
                 name: "HaxpeOrders");
 
             migrationBuilder.DropTable(
-                name: "HaxpePartners");
+                name: "HaxpePartnerFileInfos");
+
+            migrationBuilder.DropTable(
+                name: "HaxpePartnersIndustries");
 
             migrationBuilder.DropTable(
                 name: "HaxpeServiceTypes");
+
+            migrationBuilder.DropTable(
+                name: "HaxpeWorkerLocationTracker");
 
             migrationBuilder.DropTable(
                 name: "HaxpeWorkerServiceTypes");
@@ -430,6 +541,9 @@ namespace Haxpe.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "HaxpePartners");
 
             migrationBuilder.DropTable(
                 name: "HaxpeWorkers");
