@@ -39,5 +39,7 @@ namespace Haxpe.V1.Orders
         public Guid? CouponId { get; set; }
 
         public string? CouponCode { get; set; }
+
+        public string? CancelReason { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace Haxpe.V1.Orders
 
         Task<OrderV1Dto> ConfirmOrder(Guid orderId);
 
-        Task<OrderV1Dto> CancelOrder(Guid orderId);
+        Task<OrderV1Dto> CancelOrder(Guid orderId, OrderCancelReasonDto reasonDto);
 
         Task<OrderV1Dto> GetOrder(Guid id);
 

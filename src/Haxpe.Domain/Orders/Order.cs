@@ -66,6 +66,8 @@ namespace Haxpe.Orders
 
         public string? CouponCode { get; set; }
 
+        public string? CancelReason { get; set; }
+
         public void AssignWorker(Worker worker)
         {
             if (OrderStatus != OrderStatus.Created)
@@ -97,11 +99,12 @@ namespace Haxpe.Orders
             OrderStatus = OrderStatus.Created;
         }
 
-        public void Cancel()
+        public void Cancel(string? cancelReason = null)
         {
             if (OrderStatus == OrderStatus.Draft || OrderStatus == OrderStatus.Created)
             {
                 OrderStatus = OrderStatus.Canceled;
+                CancelReason = cancelReason;
             }
             else
             {

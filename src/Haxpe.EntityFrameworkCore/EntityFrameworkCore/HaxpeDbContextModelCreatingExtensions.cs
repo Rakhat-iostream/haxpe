@@ -131,6 +131,7 @@ namespace Haxpe.EntityFrameworkCore
                  b.Property(p => p.Comment);
                  b.Property(p => p.CouponId);
                  b.Property(p => p.CouponCode).HasMaxLength(256);
+                 b.Property(p => p.CancelReason).HasMaxLength(256);
 
                  b.HasIndex(x => new { x.CustomerId });
                  b.HasIndex(x => new { x.WorkerId });

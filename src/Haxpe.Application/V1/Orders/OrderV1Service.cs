@@ -99,7 +99,7 @@ namespace Haxpe.V1.Orders
             return res;
         }
 
-        public async Task<OrderV1Dto> CancelOrder(Guid id)
+        public async Task<OrderV1Dto> CancelOrder(Guid id, OrderCancelReasonDto reasonDto)
         {
             var order = await orderRepository.FindAsync(id);
             if (order == null)
@@ -114,7 +114,7 @@ namespace Haxpe.V1.Orders
                 throw new UnauthorizedAccessException();
             }
 
-            order.Cancel();
+            order.Cancel(reasonDto.Reason);
 
             var res = this.mapper.Map<OrderV1Dto>(order);
             await this.OrderChangedNotify(res);

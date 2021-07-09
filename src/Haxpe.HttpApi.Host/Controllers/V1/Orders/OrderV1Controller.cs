@@ -91,9 +91,9 @@ namespace Haxpe.V1.Orders
         [HttpPost]
         [Route("api/v1/order/{id}/cancel")]
         [Authorize(Roles = RoleConstants.Customer)]
-        public async Task<Response<OrderV1Dto>> CancelOrder(Guid id)
+        public async Task<Response<OrderV1Dto>> CancelOrder(Guid id, [FromBody] OrderCancelReasonDto reasonDto)
         {
-            var res = await service.CancelOrder(id);
+            var res = await service.CancelOrder(id, reasonDto);
             return Response<OrderV1Dto>.Ok(res);
         }
 
