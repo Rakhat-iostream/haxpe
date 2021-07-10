@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -45,6 +46,12 @@ namespace Haxpe.V1.Workers
             var partner = await _partnerRepository.FindAsync(worker.PartnerId);
             CheckPartner(partner);
             await base.DeleteAsync(id);
+        }
+
+        public async Task<IReadOnlyCollection<WorkerV1Dto>> GetListAsync(WorkerListRequestV1Dto query)
+        {
+                var workers = await Repository.GetListAsync(x => x.PartnerId == query.PartnerId);
+                return workers.Select(base.MapToGetOutputDto).ToArray();
         }
 
         //protected override async Task<IQueryable<Worker>> CreateFilteredQueryAsync(WorkerListRequestV1Dto input)

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Haxpe.V1.Workers
 {
-    public class WorkerListRequestV1Dto: PagedAndSortedResultRequestDto
+    public class WorkerListRequestV1Dto
     {
         [Required]
         public Guid PartnerId { get; set; }

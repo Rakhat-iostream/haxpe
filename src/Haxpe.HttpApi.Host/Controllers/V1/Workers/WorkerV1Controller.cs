@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
@@ -58,10 +59,11 @@ namespace Haxpe.V1.Workers
 
         [Route("api/v1/worker")]
         [HttpGet]
-        public async Task<Response<PagedResultDto<WorkerV1Dto>>> GetListAsync([FromQuery] WorkerListRequestV1Dto input)
+        [Authorize(Roles = RoleConstants.Admin + "," + RoleConstants.Partner)]
+        public async Task<Response<IReadOnlyCollection<WorkerV1Dto>>> GetListAsync([FromQuery] WorkerListRequestV1Dto input)
         {
-            var res = await workerV1Service.GetPageAsync(input);
-            return Response<WorkerV1Dto>.Ok(res);
+            var res = await workerV1Service.GetListAsync(input);
+            return Response<IReadOnlyCollection<WorkerV1Dto>>.Ok(res);
         }
 
         [Route("api/v1/worker/page")]
