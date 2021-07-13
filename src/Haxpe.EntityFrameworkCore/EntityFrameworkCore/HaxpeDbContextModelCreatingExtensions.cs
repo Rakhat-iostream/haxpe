@@ -132,11 +132,19 @@ namespace Haxpe.EntityFrameworkCore
                  b.Property(p => p.CouponId);
                  b.Property(p => p.CouponCode).HasMaxLength(256);
                  b.Property(p => p.CancelReason).HasMaxLength(256);
+                 b.HasMany(x => x.TimeTrackers).WithOne();
+                 b.Navigation(x => x.TimeTrackers).AutoInclude();
 
                  b.HasIndex(x => new { x.CustomerId });
                  b.HasIndex(x => new { x.WorkerId });
                  b.HasIndex(x => new { x.PartnerId });
              });
+
+            builder.Entity<OrderTimeTracker>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "OrderTimeTrackers", HaxpeConsts.DbSchema);
+                b.HasKey(x => new { x.OrderId, x.StartDate });
+            });
 
             builder.Entity<Coupon>(b =>
             {

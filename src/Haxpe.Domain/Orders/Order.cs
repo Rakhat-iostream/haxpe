@@ -2,6 +2,8 @@
 using Haxpe.Workers;
 using Haxpe.Infrastructure;
 using Haxpe.Coupons;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Haxpe.Orders
 {
@@ -26,6 +28,7 @@ namespace Haxpe.Orders
             Tax = tax;
             OrderStatus = orderStatus;
             CreationDate = DateTime.UtcNow;
+            TimeTrackers = new List<OrderTimeTracker>();
         }
         
         private Order() { }
@@ -68,6 +71,8 @@ namespace Haxpe.Orders
 
         public string? CancelReason { get; set; }
 
+        public ICollection<OrderTimeTracker> TimeTrackers { get; set; }
+
         public void AssignWorker(Worker worker)
         {
             if (OrderStatus != OrderStatus.Created)
@@ -77,17 +82,47 @@ namespace Haxpe.Orders
             
             WorkerId = worker.Id;
             PartnerId = worker.PartnerId;
-            OrderStatus = OrderStatus.WorkerFound;
+            OrderStatus = OrderStatus.Reserved;
         }
         
         public void StartJob()
         {
-            if (OrderStatus != OrderStatus.WorkerFound)
+            if (OrderStatus != OrderStatus.Reserved)
             {
                 throw new BusinessException(HaxpeDomainErrorCodes.OrderWorkflowViolation);
             }
             StartDate = DateTimeOffset.Now;
             OrderStatus = OrderStatus.InProgress;
+            TimeTrackers.Add(
+                new OrderTimeTracker() { OrderId = Id, StartDate = DateTime.UtcNow }
+            );
+        }
+
+        public void Paused()
+        {
+            if (OrderStatus != OrderStatus.InProgress)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.OrderWorkflowViolation);
+            }
+            OrderStatus = OrderStatus.Paused;
+
+            var lastTimeTracker = TimeTrackers.FirstOrDefault(x => x.EndDate == null);
+            if(lastTimeTracker != null)
+            {
+                lastTimeTracker.EndDate = DateTime.UtcNow;
+            }
+        }
+
+        public void Resume()
+        {
+            if (OrderStatus != OrderStatus.Paused)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.OrderWorkflowViolation);
+            }
+            OrderStatus = OrderStatus.InProgress;
+            TimeTrackers.Add(
+                new OrderTimeTracker() { OrderId = Id, StartDate = DateTime.UtcNow }
+            );
         }
 
         public void Confirm()
@@ -120,6 +155,12 @@ namespace Haxpe.Orders
             }
             CompletedDate = DateTimeOffset.Now;
             OrderStatus = OrderStatus.Completed;
+
+            var lastTimeTracker = TimeTrackers.FirstOrDefault(x => x.EndDate == null);
+            if (lastTimeTracker != null)
+            {
+                lastTimeTracker.EndDate = DateTime.UtcNow;
+            }
         }
 
         public void ApplyCoupon(Coupon coupon)
@@ -134,8 +175,9 @@ namespace Haxpe.Orders
             {
                 OrderStatus.Draft,
                 OrderStatus.Created,
-                OrderStatus.WorkerFound,
-                OrderStatus.InProgress
+                OrderStatus.Reserved,
+                OrderStatus.InProgress,
+                OrderStatus.Paused
             };
         }
     }

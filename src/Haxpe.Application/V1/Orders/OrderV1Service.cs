@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Hangfire;
 using Haxpe.Coupons;
 using Haxpe.Customers;
 using Haxpe.Infrastructure;
@@ -13,6 +14,7 @@ using Haxpe.Roles;
 using Haxpe.Taxes;
 using Haxpe.Users;
 using Haxpe.V1.Events;
+using Haxpe.V1.Workers;
 using Haxpe.Workers;
 
 namespace Haxpe.V1.Orders
@@ -28,6 +30,7 @@ namespace Haxpe.V1.Orders
         private readonly ITaxProvider taxProvider;
         private readonly ICurrentUserService currentUserService;
         private readonly IEventEmitter eventEmitter;
+        private readonly IBackgroundJobClient backgroundJobs;
 
         public OrderV1Service(
             IRepository<Order, Guid> orderRepository,
@@ -39,7 +42,8 @@ namespace Haxpe.V1.Orders
             ITaxProvider taxProvider,
             ICurrentUserService currentUserService,
             IEventEmitter eventEmitter,
-            IMapper mapper) : base(mapper)
+            IMapper mapper, 
+            IBackgroundJobClient backgroundJobs) : base(mapper)
         {
             this.orderRepository = orderRepository;
             this.workerRepository = workerRepository;
@@ -50,6 +54,7 @@ namespace Haxpe.V1.Orders
             this.currentUserService = currentUserService;
             this.couponRepository = couponRepository;
             this.eventEmitter = eventEmitter;
+            this.backgroundJobs = backgroundJobs;
         }
 
         public async Task<OrderV1Dto> ApplyCoupon(Guid id, ApplyCouponDto model)
@@ -144,6 +149,9 @@ namespace Haxpe.V1.Orders
             order.Confirm();
             var res = this.mapper.Map<OrderV1Dto>(order);
             await this.OrderChangedNotify(res);
+
+            this.backgroundJobs.Enqueue<IWorkerNotifierService>(n => n.OrderOfferNotify(id));
+
             return res;
         }
 
@@ -243,9 +251,25 @@ namespace Haxpe.V1.Orders
             throw new UnauthorizedAccessException();
         }
 
-        public Task<OrderV1Dto> StartJob(Guid id)
+        public async Task<OrderV1Dto> StartJob(Guid id)
         {
-            throw new NotImplementedException();
+            var order = await orderRepository.FindAsync(id);
+            if (order == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.OrderNotFound);
+            }
+
+            var userId = await this.currentUserService.GetCurrentUserIdAsync();
+            var worker = await this.workerRepository.FindAsync(x => x.UserId == userId);
+            if (order.WorkerId != worker.Id)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            order.StartJob();
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
 
         public Task<OrderV1Dto> UpdateOrder(CreateOrderV1Dto order)
@@ -263,6 +287,50 @@ namespace Haxpe.V1.Orders
                 var worker = await this.workerRepository.FindAsync(dto.WorkerId.Value);
                 await this.eventEmitter.SendEvent(worker.UserId, new OrderChangedEvent() { Payload = dto });
             }
+        }
+
+        public async Task<OrderV1Dto> PauseJob(Guid id)
+        {
+            var order = await orderRepository.FindAsync(id);
+            if (order == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.OrderNotFound);
+            }
+
+            var userId = await this.currentUserService.GetCurrentUserIdAsync();
+            var worker = await this.workerRepository.FindAsync(x => x.UserId == userId);
+            if (order.WorkerId != worker.Id)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            order.Paused();
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
+        }
+
+        public async Task<OrderV1Dto> ResumeJob(Guid id)
+        {
+            var order = await orderRepository.FindAsync(id);
+            if (order == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.OrderNotFound);
+            }
+
+            var userId = await this.currentUserService.GetCurrentUserIdAsync();
+            var worker = await this.workerRepository.FindAsync(x => x.UserId == userId);
+            if (order.WorkerId != worker.Id)
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            order.Resume();
+
+            var res = this.mapper.Map<OrderV1Dto>(order);
+            await this.OrderChangedNotify(res);
+            return res;
         }
     }
 }

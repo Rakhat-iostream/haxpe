@@ -46,6 +46,8 @@ using Haxpe.V1.Statistics;
 using Haxpe.Infrastructure.Statistics;
 using Microsoft.Extensions.Logging.Console;
 using Haxpe.V1.Events;
+using Hangfire;
+using Hangfire.PostgreSql;
 
 namespace Haxpe
 {
@@ -118,6 +120,7 @@ namespace Haxpe
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IFileStorage, LocalFileStorage>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<IWorkerNotifierService, WorkerNotifierService>();
 
             services.AddDbContext<HaxpeDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
             
@@ -150,6 +153,14 @@ namespace Haxpe
                 options.User.RequireUniqueEmail = true;
             });
 
+            services.AddHangfire(configuration => configuration
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(Configuration.GetConnectionString("HangfireConnection")));
+
+            services.AddHangfireServer();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -174,6 +185,8 @@ namespace Haxpe
             {
                 //app.UseErrorPage();
             }
+
+            app.UseHangfireDashboard();
 
             app.UseApiVersioning();
 
