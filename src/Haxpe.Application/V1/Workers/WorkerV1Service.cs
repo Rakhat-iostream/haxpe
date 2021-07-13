@@ -74,5 +74,17 @@ namespace Haxpe.V1.Workers
             //    throw new BusinessException("Access denied");
             //}
         }
+
+        public async Task<WorkerV1Dto> GetByUserId(Guid id)
+        {
+            var worker = await this.Repository.FindAsync(x => x.UserId == id);
+
+            if (worker == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.NotFound);
+            }
+
+            return base.MapToGetOutputDto(worker);
+        }
     }
 }
