@@ -53,9 +53,7 @@ namespace Haxpe.V1.Orders
 
         [HttpPost]
         [Route("api/v1/order/{id}/assign-worker/{workerId}")]
-        [Authorize(Roles = RoleConstants.Admin)]
-        [Authorize(Roles = RoleConstants.Partner)]
-        [Authorize(Roles = RoleConstants.Worker)]
+        [Authorize(Roles = RoleConstants.Admin + "," + RoleConstants.Partner + "," + RoleConstants.Worker)]
         public async Task<Response<OrderV1Dto>> AssignWorker(Guid id, Guid workerId)
         {
             var res = await service.AssignWorker(id, workerId);
