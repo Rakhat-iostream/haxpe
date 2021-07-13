@@ -78,6 +78,24 @@ namespace Haxpe.V1.Orders
         }
 
         [HttpPost]
+        [Route("api/v1/order/{id}/pause")]
+        [Authorize(Roles = RoleConstants.Worker)]
+        public async Task<Response<OrderV1Dto>> PauseJob(Guid id)
+        {
+            var res = await service.PauseJob(id);
+            return Response<OrderV1Dto>.Ok(res);
+        }
+
+        [HttpPost]
+        [Route("api/v1/order/{id}/resume")]
+        [Authorize(Roles = RoleConstants.Worker)]
+        public async Task<Response<OrderV1Dto>> ResumeJob(Guid id)
+        {
+            var res = await service.ResumeJob(id);
+            return Response<OrderV1Dto>.Ok(res);
+        }
+
+        [HttpPost]
         [Route("api/v1/order/{id}/confirm")]
         [Authorize(Roles = RoleConstants.Customer)]
         public async Task<Response<OrderV1Dto>> ConfirmOrder(Guid id)
