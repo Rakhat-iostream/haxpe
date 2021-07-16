@@ -38,6 +38,18 @@ namespace Haxpe.V1.Partners
             return await base.UpdateAsync(id, input);
         }
 
+        public async Task<PartnerV1Dto> SetStatus(Guid id, PartnerStatusDto input)
+        {
+            var partner = await Repository.FindAsync(id);
+            if(partner == null)
+            {
+                throw new BusinessException(HaxpeDomainErrorCodes.NotFound);
+            }
+
+            partner.ChangeStatus(input.PartnerStatus);
+            return base.MapToGetOutputDto(partner);
+        }
+
         public async Task<IReadOnlyCollection<FileInfoDto>> GetFiles(Guid partnerId)
         {
             var partnerFiles = await this.partnerFileReporistory.GetListAsync(x => x.PartnerId == partnerId);
