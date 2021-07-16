@@ -1,4 +1,5 @@
 using Haxpe.Infrastructure;
+using Haxpe.Partners;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,6 +20,8 @@ namespace Haxpe.V1.Partners
         public Guid? AddressId { get; set; }
 
         public int? NumberOfWorkers { get; set; }
+
+        public PartnerStatus partnerStatus { get; set; }
 
         public ICollection<PartnerIndustryV1Dto> Industries { get; set; }
     }

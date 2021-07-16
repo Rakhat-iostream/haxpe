@@ -1,4 +1,5 @@
 using Haxpe.Infrastructure;
+using Haxpe.Partners;
 using Haxpe.V1.Files;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,8 @@ namespace Haxpe.V1.Partners
         Task<PartnerV1Dto> GetByUserId(Guid id);
 
         Task<IReadOnlyCollection<FileInfoDto>> GetFiles(Guid partnerId);
+
+        Task<PartnerV1Dto> SetStatus(Guid id, PartnerStatusDto input);
 
         Task<(FileInfoDto, Stream)> GetFile(Guid partnerId, Guid fileId);
 

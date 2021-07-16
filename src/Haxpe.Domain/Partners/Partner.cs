@@ -1,3 +1,4 @@
+using Haxpe.Enums;
 using Haxpe.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,8 @@ namespace Haxpe.Partners
 
         public int? NumberOfWorkers { get; set; }
 
+        public PartnerStatus? PartnerStatus { get; set; }
+
         public ICollection<PartnersIndustry> Industries { get; set; }
 
 
@@ -26,7 +29,8 @@ namespace Haxpe.Partners
             Guid ownerUserId,
             string? description = null, 
             Guid? addressId = null,
-            int? numberOfWorkers = null)
+            int? numberOfWorkers = null,
+            PartnerStatus? partnerStatus = null)
             :base(id)
         {
             Name = name;
@@ -35,11 +39,17 @@ namespace Haxpe.Partners
             AddressId = addressId;
             NumberOfWorkers = numberOfWorkers;
             CreationDate = DateTime.UtcNow;
+            PartnerStatus = partnerStatus;
             Industries = new Collection<PartnersIndustry>();
         }
 
         private Partner()
         {
+        }
+
+        public void ChangeStatus(PartnerStatus? status)
+        {
+            PartnerStatus = status;
         }
     }
 }

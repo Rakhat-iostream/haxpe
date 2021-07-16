@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
 using Haxpe.Models;
+using Haxpe.Partners;
 using Haxpe.Roles;
 using Haxpe.Users;
 using Haxpe.V1.Account;
@@ -92,6 +93,15 @@ namespace Haxpe.V1.Partners
         public  async Task<Response<PartnerV1Dto>> UpdateAsync(Guid id, [FromBody] UpdatePartnerV1Dto input)
         {
             var res = await partnerV1Service.UpdateAsync(id, input);
+            return Response<PartnerV1Dto>.Ok(res);
+        }
+
+        [Authorize(Roles = RoleConstants.Admin)]
+        [Route("api/v1/partner-status/{id}/status")]
+        [HttpPost]
+        public async Task<Response<PartnerV1Dto>> SetStatus(Guid id, [FromBody] PartnerStatusDto input)
+        {
+            var res = await partnerV1Service.SetStatus(id, input);
             return Response<PartnerV1Dto>.Ok(res);
         }
 

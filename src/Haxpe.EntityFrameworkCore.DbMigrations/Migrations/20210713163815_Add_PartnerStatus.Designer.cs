@@ -4,14 +4,16 @@ using Haxpe.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Haxpe.Migrations
 {
     [DbContext(typeof(HaxpeMigrationsDbContext))]
-    partial class HaxpeMigrationsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210713163815_Add_PartnerStatus")]
+    partial class Add_PartnerStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -264,22 +266,6 @@ namespace Haxpe.Migrations
                     b.HasIndex("WorkerId");
 
                     b.ToTable("HaxpeOrders");
-                });
-
-            modelBuilder.Entity("Haxpe.Orders.OrderTimeTracker", b =>
-                {
-                    b.Property<Guid>("OrderId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.HasKey("OrderId", "StartDate");
-
-                    b.ToTable("HaxpeOrderTimeTrackers");
                 });
 
             modelBuilder.Entity("Haxpe.Partners.Partner", b =>
@@ -638,15 +624,6 @@ namespace Haxpe.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Haxpe.Orders.OrderTimeTracker", b =>
-                {
-                    b.HasOne("Haxpe.Orders.Order", null)
-                        .WithMany("TimeTrackers")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Haxpe.Partners.PartnersIndustry", b =>
                 {
                     b.HasOne("Haxpe.Partners.Partner", null)
@@ -714,11 +691,6 @@ namespace Haxpe.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Haxpe.Orders.Order", b =>
-                {
-                    b.Navigation("TimeTrackers");
                 });
 
             modelBuilder.Entity("Haxpe.Partners.Partner", b =>
