@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using AutoMapper;
 using Haxpe.Infrastructure;
@@ -21,6 +22,7 @@ namespace Haxpe.V1.Account
         private readonly IEmailService _emailService;
         private readonly ICallbackUrlService _callbackUrlService;
         private readonly ICurrentUserService currentUserService;
+        private readonly ILanguageSwitcherService _languageSwitcherService;
 
         protected SignInManager<User> SignInManager { get; }
         protected UserManager<User> UserManager { get; }
@@ -33,6 +35,7 @@ namespace Haxpe.V1.Account
             IEmailService emailService,
             ICallbackUrlService callbackUrlService,
             ICurrentUserService currentUserService,
+            ILanguageSwitcherService languageSwitcherService,
             IMapper mapper) 
             : base(mapper)
         {
@@ -43,10 +46,13 @@ namespace Haxpe.V1.Account
             _emailService = emailService;
             _callbackUrlService = callbackUrlService;
             this.currentUserService = currentUserService;
+            _languageSwitcherService = languageSwitcherService;
         }
-
         public virtual async Task<UserProfileDto> RegisterAsync(RegisterDto input)
+
         {
+            var language = await _languageSwitcherService.SetLanguage(input.PreferLanguage);
+            
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -55,7 +61,7 @@ namespace Haxpe.V1.Account
                 Name = input.FirstName,
                 Surname = input.LastName,
                 PhoneNumber = input.Phone,
-                PreferLanguage = input.PreferLanguage
+                PreferLanguage = language
             };
             user.SetFullName(input.FirstName, input.LastName);
 
@@ -68,7 +74,7 @@ namespace Haxpe.V1.Account
                 Path = FrontUrls.CustomerConfirmEmailCallback
             }, new { userId = user.Id, code = code });
 
-            await _emailService.SendCustomerRegistrationConfirm(user.Email, input.PreferLanguage ?? "en", new CustomerRegistrationConfirmModel()
+            await _emailService.SendCustomerRegistrationConfirm(user.Email, language, new CustomerRegistrationConfirmModel()
             {
                 CustomerName = $"{user.Name} {user.Surname}",
                 CallbackUrl = callbackUrl
@@ -85,7 +91,9 @@ namespace Haxpe.V1.Account
                 throw new BusinessException(HaxpeDomainErrorCodes.AccountExternalUserPasswordChange);
             }
             var resetToken = await UserManager.GeneratePasswordResetTokenAsync(user);
-            await _emailService.SendPasswordResetLink(user.Email, user.PreferLanguage ?? "en", null);
+           
+            var language = await _languageSwitcherService.SetLanguage(user.PreferLanguage);
+            await _emailService.SendPasswordResetLink(user.Email, language, null);
         }
 
         public virtual async Task ResetPasswordAsync(ResetPasswordDto input)

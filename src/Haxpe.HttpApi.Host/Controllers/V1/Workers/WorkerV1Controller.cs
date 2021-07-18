@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Haxpe.Infrastructure;
 using Haxpe.Models;
-using Haxpe.Partners;
 using Haxpe.Roles;
 using Haxpe.Services;
 using Haxpe.Users;
@@ -13,7 +12,6 @@ using Haxpe.V1.Common;
 using Haxpe.V1.Constants;
 using Haxpe.V1.Emails;
 using Haxpe.V1.Partners;
-using Haxpe.Workers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +31,7 @@ namespace Haxpe.V1.Workers
         private readonly IEmailService _emailService;
         private readonly ICallbackUrlService _callbackUrlService;
         private readonly IPasswordsGenService _passwordsGenService;
+        private readonly ILanguageSwitcherService _languageSwitcherService;
 
         public WorkerV1Controller(
             IWorkerV1Service workerV1Service,
@@ -40,7 +39,8 @@ namespace Haxpe.V1.Workers
             UserManager<User> userManager,
              IEmailService emailService,
             ICallbackUrlService callbackUrlService,
-            IPasswordsGenService passwordsGenService, 
+            IPasswordsGenService passwordsGenService,
+            ILanguageSwitcherService languageSwitcherService,
             ICurrentUserService currentUserService)
         {
             this.workerV1Service = workerV1Service;
@@ -49,6 +49,7 @@ namespace Haxpe.V1.Workers
             _emailService = emailService;
             _callbackUrlService = callbackUrlService;
             _passwordsGenService = passwordsGenService;
+            _languageSwitcherService = languageSwitcherService;
             this.currentUserService = currentUserService;
         }
 
@@ -129,8 +130,9 @@ namespace Haxpe.V1.Workers
             }, new { Id = user.Id, code = code });
 
             var partnerName = await partnerV1Service.FindAsync(input.PartnerId);
-            
-            await _emailService.SendWorkerRegistrationConfirm(user.Email, user.PreferLanguage ?? "en", new WorkerRegistrationConfirmModel()
+
+            var language = await _languageSwitcherService.SetLanguage(user.PreferLanguage);
+            await _emailService.SendWorkerRegistrationConfirm(user.Email, language, new WorkerRegistrationConfirmModel()
             {
                 PartnerName = $"{partnerName.Name};",
                 WorkerName = $"{user.FullName}",
