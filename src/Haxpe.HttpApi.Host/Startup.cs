@@ -1,5 +1,4 @@
-﻿using Haxpe.Common;
-using Haxpe.EntityFrameworkCore;
+using Haxpe.Common;
 using Haxpe.Filters;
 using Haxpe.Infrastructure;
 using Haxpe.Services;
@@ -23,30 +22,29 @@ using Haxpe.V1.WorkerLocationTrackers;
 using Haxpe.V1.Users;
 using Haxpe.V1.Workers;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Prometheus;
 using Prometheus.DotNetRuntime;
 using SendGrid;
 using System;
-using System.Threading.Tasks;
 using Haxpe.V1.Files;
 using Haxpe.V1.Statistics;
-using Haxpe.Infrastructure.Statistics;
-using Microsoft.Extensions.Logging.Console;
 using Haxpe.V1.Events;
+using Haxpe.EntityFrameworkCore;
+using Haxpe.Infrastructure.Statistics;
+using Microsoft.AspNetCore.Identity;
 using Hangfire;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.OpenApi.Models;
 using Hangfire.PostgreSql;
 
 namespace Haxpe
@@ -120,6 +118,8 @@ namespace Haxpe
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IFileStorage, LocalFileStorage>();
             services.AddScoped<IStatisticsService, StatisticsService>();
+            services.AddScoped<ILanguageSwitcherService, LanguageSwitcherService>();
+
             services.AddScoped<IWorkerNotifierService, WorkerNotifierService>();
 
             services.AddDbContext<HaxpeDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
@@ -163,7 +163,7 @@ namespace Haxpe
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseForwardedHeaders();
             app.Use((context, next) =>
@@ -192,7 +192,6 @@ namespace Haxpe
 
             app.UseRouting();
             app.UseHttpMetrics();
-
 
             app.UseCors("Default");
             app.UseCookiePolicy(new CookiePolicyOptions
