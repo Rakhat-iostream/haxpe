@@ -4,6 +4,7 @@ using Haxpe.Infrastructure;
 using Haxpe.Coupons;
 using System.Collections.Generic;
 using System.Linq;
+using Haxpe.ExtraServices;
 
 namespace Haxpe.Orders
 {
@@ -73,6 +74,21 @@ namespace Haxpe.Orders
 
         public ICollection<OrderTimeTracker> TimeTrackers { get; set; }
 
+        public ICollection<ExtraService> ExtraServices { get; set; }
+
+        public void AddExternalCosts()
+        {
+            var extra = new ExtraService();
+
+            ExtraServices.Add(
+                new ExtraService() 
+                { 
+                    OrderId = Id, 
+                    Name = extra.Name, 
+                    Price = extra.Price 
+                });
+        }
+
         public void AssignWorker(Worker worker)
         {
             if (OrderStatus != OrderStatus.Created)
@@ -83,6 +99,11 @@ namespace Haxpe.Orders
             WorkerId = worker.Id;
             PartnerId = worker.PartnerId;
             OrderStatus = OrderStatus.Reserved;
+
+            if (worker.ServiceTypes != null)
+            {
+                AddExternalCosts();
+            }
         }
         
         public void StartJob()
