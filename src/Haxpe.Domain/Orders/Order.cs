@@ -30,6 +30,7 @@ namespace Haxpe.Orders
             OrderStatus = orderStatus;
             CreationDate = DateTime.UtcNow;
             TimeTrackers = new List<OrderTimeTracker>();
+            ExtraServices = new List<ExtraService>();
         }
         
         private Order() { }
@@ -87,6 +88,22 @@ namespace Haxpe.Orders
                     Name = extra.Name, 
                     Price = extra.Price 
                 });
+        }
+
+        public void MinusCosts(decimal sale)
+        {
+
+            var extra = new ExtraService();
+            if (ExtraServices != null)
+             {
+                ExtraServices.Add(
+                new ExtraService()
+                {
+                    OrderId = Id,
+                    Name = extra.Name,
+                    Price = extra.Price * sale
+                });
+            }
         }
 
         public void AssignWorker(Worker worker)
