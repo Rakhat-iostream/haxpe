@@ -123,6 +123,22 @@ namespace Haxpe.Migrations
                     b.ToTable("HaxpeCustomers");
                 });
 
+            modelBuilder.Entity("Haxpe.ExtraServices.ExtraService", b =>
+                {
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("OrderId", "Name");
+
+                    b.ToTable("HaxpeExtraServices");
+                });
+
             modelBuilder.Entity("Haxpe.Files.FileInfo", b =>
                 {
                     b.Property<Guid>("Id")
@@ -638,6 +654,15 @@ namespace Haxpe.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Haxpe.ExtraServices.ExtraService", b =>
+                {
+                    b.HasOne("Haxpe.Orders.Order", null)
+                        .WithMany("ExtraServices")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Haxpe.Orders.OrderTimeTracker", b =>
                 {
                     b.HasOne("Haxpe.Orders.Order", null)
@@ -718,6 +743,8 @@ namespace Haxpe.Migrations
 
             modelBuilder.Entity("Haxpe.Orders.Order", b =>
                 {
+                    b.Navigation("ExtraServices");
+
                     b.Navigation("TimeTrackers");
                 });
 

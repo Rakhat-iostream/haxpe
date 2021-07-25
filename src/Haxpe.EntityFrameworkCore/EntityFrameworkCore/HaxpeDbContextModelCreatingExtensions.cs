@@ -1,6 +1,7 @@
 ﻿using Haxpe.Addresses;
 using Haxpe.Coupons;
 using Haxpe.Customers;
+using Haxpe.ExtraServices;
 using Haxpe.Files;
 using Haxpe.Industries;
 using Haxpe.Orders;
@@ -186,6 +187,12 @@ namespace Haxpe.EntityFrameworkCore
                 b.Property(p => p.FileId);
                 b.Property(p => p.PartnerId);
                 b.HasIndex(p => p.PartnerId);
+            });
+
+            builder.Entity<ExtraService>(b =>
+            {
+                b.ToTable(HaxpeConsts.DbTablePrefix + "ExtraServices", HaxpeConsts.DbSchema);
+                b.HasKey(x => new { x.OrderId, x.Name });
             });
         }
     }

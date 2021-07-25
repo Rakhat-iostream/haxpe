@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Haxpe.Migrations
 {
-    public partial class Add_ExtraService : Migration
+    public partial class Create_ExtraServices : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,21 +11,20 @@ namespace Haxpe.Migrations
                 name: "HaxpeExtraServices",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Price = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HaxpeExtraServices", x => x.Id);
+                    table.PrimaryKey("PK_HaxpeExtraServices", x => new { x.OrderId, x.Name });
+                    table.ForeignKey(
+                        name: "FK_HaxpeExtraServices_HaxpeOrders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "HaxpeOrders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HaxpeExtraServices_OrderId",
-                table: "HaxpeExtraServices",
-                column: "OrderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

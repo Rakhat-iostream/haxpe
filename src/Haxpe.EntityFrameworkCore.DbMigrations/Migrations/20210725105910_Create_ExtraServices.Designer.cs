@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Haxpe.Migrations
 {
     [DbContext(typeof(HaxpeMigrationsDbContext))]
-    [Migration("20210718144432_Add_ExtraService")]
-    partial class Add_ExtraService
+    [Migration("20210725105910_Create_ExtraServices")]
+    partial class Create_ExtraServices
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -127,26 +127,16 @@ namespace Haxpe.Migrations
 
             modelBuilder.Entity("Haxpe.ExtraServices.ExtraService", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
+                    b.HasKey("OrderId", "Name");
 
                     b.ToTable("HaxpeExtraServices");
                 });
@@ -666,6 +656,15 @@ namespace Haxpe.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Haxpe.ExtraServices.ExtraService", b =>
+                {
+                    b.HasOne("Haxpe.Orders.Order", null)
+                        .WithMany("ExtraServices")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Haxpe.Orders.OrderTimeTracker", b =>
                 {
                     b.HasOne("Haxpe.Orders.Order", null)
@@ -746,6 +745,8 @@ namespace Haxpe.Migrations
 
             modelBuilder.Entity("Haxpe.Orders.Order", b =>
                 {
+                    b.Navigation("ExtraServices");
+
                     b.Navigation("TimeTrackers");
                 });
 
